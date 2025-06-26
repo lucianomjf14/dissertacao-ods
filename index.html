@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cidades Inteligentes e ODS - RSL | Luciano Marinho Silveira</title>
+    <!-- Atualização: 26/06/2025 15:55 -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -211,7 +212,18 @@
 
             headerContainer.innerHTML = `<tr>${appState.columnNames.filter((_, i) => visibleColumns.has(i)).map(name => `<th>${name}</th>`).join('')}</tr>`;
 
-            bodyContainer.innerHTML = appState.tableData.map(row => {
+            // Colunas que devem ser truncadas no modo "Todas"
+            const columnsToTruncate = [
+                'Trechos correlações', 
+                'Palavras Chave', 
+                'Palavras chave normalizadas e Traduzidas', 
+                'Indicadores CSC', 
+                'CORPUS - IRAMUTEQ',
+                'Aspecto Principal - Estudo',
+                'Categorias'
+            ];
+
+            bodyContainer.innerHTML = appState.tableData.map((row, rowIndex) => {
                 return `<tr>${appState.columnNames.map((colName, colIndex) => {
                     if (!visibleColumns.has(colIndex)) return '';
                     let cellValue = row[colName] || '';
@@ -223,6 +235,27 @@
                         cellHtml = formatODSCell(cellValue);
                     } else if (colName === 'Pilar CSC') {
                         cellHtml = formatCSCPillarCell(cellValue);
+                    } else if (appState.currentViewMode === 'all' && columnsToTruncate.includes(colName) && cellValue && String(cellValue).length > 10) {
+                        // Aplicar truncamento apenas no modo "Todas" para colunas específicas
+                        // Colunas com truncamento mais agressivo (10 caracteres)
+                        const isShortTruncate = ['Trechos correlações', 'CORPUS - IRAMUTEQ'].includes(colName);
+                        const maxLength = isShortTruncate ? 10 : 50;
+                        const truncatedText = String(cellValue).substring(0, maxLength);
+                        const uniqueId = `truncated_${rowIndex}_${colIndex}`;
+                        cellHtml = `
+                            <div class="truncated-content">
+                                <span id="${uniqueId}_short">${truncatedText}...</span>
+                                <span id="${uniqueId}_full" style="display: none;">${cellValue}</span>
+                                <br>
+                                <button 
+                                    id="${uniqueId}_btn" 
+                                    class="expand-btn" 
+                                    onclick="toggleTruncatedText('${uniqueId}')"
+                                    style="font-size: 10px; padding: 2px 6px; margin-top: 3px; background: #007bff; color: white; border: none; border-radius: 3px; cursor: pointer;">
+                                    Ver mais
+                                </button>
+                            </div>
+                        `;
                     }
                     return `<td>${cellHtml}</td>`;
                 }).join('')}</tr>`;
@@ -323,6 +356,29 @@
                 if (data.count === 0) return '';
                 return `<div class="ods-card"><img src="${config.odsIcons[ods]}" class="ods-icon"><div class="ods-title">${ods}</div><div class="ods-count">${data.count}</div></div>`;
             }).join('');
+        }
+
+        // Função para alternar entre texto truncado e completo
+        function toggleTruncatedText(uniqueId) {
+            const shortText = document.getElementById(`${uniqueId}_short`);
+            const fullText = document.getElementById(`${uniqueId}_full`);
+            const button = document.getElementById(`${uniqueId}_btn`);
+            
+            if (shortText && fullText && button) {
+                if (fullText.style.display === 'none') {
+                    // Mostrar texto completo
+                    shortText.style.display = 'none';
+                    fullText.style.display = 'inline';
+                    button.textContent = 'Ver menos';
+                    button.style.background = '#6c757d';
+                } else {
+                    // Mostrar texto truncado
+                    shortText.style.display = 'inline';
+                    fullText.style.display = 'none';
+                    button.textContent = 'Ver mais';
+                    button.style.background = '#007bff';
+                }
+            }
         }
     </script>
 </body>

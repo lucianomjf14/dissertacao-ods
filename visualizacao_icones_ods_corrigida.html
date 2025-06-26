@@ -234,9 +234,12 @@
                         cellHtml = formatODSCell(cellValue);
                     } else if (colName === 'Pilar CSC') {
                         cellHtml = formatCSCPillarCell(cellValue);
-                    } else if (appState.currentViewMode === 'all' && columnsToTruncate.includes(colName) && cellValue && String(cellValue).length > 50) {
+                    } else if (appState.currentViewMode === 'all' && columnsToTruncate.includes(colName) && cellValue && String(cellValue).length > 10) {
                         // Aplicar truncamento apenas no modo "Todas" para colunas específicas
-                        const truncatedText = String(cellValue).substring(0, 50);
+                        // Colunas com truncamento mais agressivo (10 caracteres)
+                        const isShortTruncate = ['Trechos correlações', 'CORPUS - IRAMUTEQ'].includes(colName);
+                        const maxLength = isShortTruncate ? 10 : 50;
+                        const truncatedText = String(cellValue).substring(0, maxLength);
                         const uniqueId = `truncated_${rowIndex}_${colIndex}`;
                         cellHtml = `
                             <div class="truncated-content">

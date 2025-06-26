@@ -1,0 +1,28 @@
+# Arquivos e pastas a serem ignorados no Git
+
+# Arquivos temporários
+*.tmp
+*.temp
+*~
+
+# Arquivos de sistema
+.DS_Store
+Thumbs.db
+
+# Arquivos de backup
+*.bak
+*.backup
+
+# Logs
+*.log
+
+# Ambiente de desenvolvimento local
+.vscode/
+.idea/
+
+# Não incluir arquivos Excel originais por questões de tamanho
+*.xlsx
+*.xls
+
+# Cache
+.cache/

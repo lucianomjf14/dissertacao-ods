@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cidades Inteligentes e ODS - RSL | Luciano Marinho Silveira</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* --- GERAL E FONTES --- */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+
+        body { font-family: 'Inter', Arial, sans-serif; margin: 0; background-color: #f5f5f5; }
+        .main-content-wrapper { display: grid; grid-template-rows: auto 1fr auto; min-height: 100vh; }
+        .container { max-width: 1400px; margin: 20px auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .hidden { display: none !important; }
+
+        /* --- ANIMAÇÕES --- */
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-50px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes continuousRotation { from { transform: rotate(45deg); } to { transform: rotate(405deg); } }
+        @keyframes slowRotation { from { transform: rotate(45deg); } to { transform: rotate(225deg); } }
+        .rotating-square { animation: continuousRotation 4s linear infinite; }
+        .slow-rotating { animation: slowRotation 6s ease-in-out infinite alternate; }
+
+        /* --- HEADER E FOOTER --- */
+        .presentation-header, .presentation-footer { background: linear-gradient(135deg, #1e3a8a 0%, #059669 50%, #06b6d4 100%); color: white; position: relative; overflow: hidden; }
+        .presentation-header { padding: 1.5rem; animation: fadeInDown 0.8s ease-out forwards; }
+        .presentation-footer { padding: 1rem; height: clamp(80px, 12vh, 120px); animation: fadeInUp 0.8s ease-out 0.3s forwards; }
+        .logo-hover:hover { transform: scale(1.05); transition: transform 0.3s ease; }
+        .geometric-pattern div { transition: all 0.3s ease; }
+        .geometric-pattern div:hover { transform: rotate(90deg) scale(1.2) !important; }
+
+        /* --- CONTROLES E BOTÕES --- */
+        .view-toggle { display: none; }
+        .toggle-btn { background: #e9ecef; color: #495057; border: 1px solid #ced4da; padding: 10px 20px; margin: 5px; border-radius: 5px; cursor: pointer; font-size: 14px; font-weight: bold; transition: all 0.2s ease; }
+        .toggle-btn:hover { background-color: #dee2e6; }
+        .toggle-btn.active { background: #007bff; color: white; border-color: #007bff; }
+        .quick-actions { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+        .quick-action-btn { padding: 5px 10px; background: #007bff; color: white; border: none; border-radius: 18px; font-size: 0.75em; cursor: pointer; transition: all 0.2s ease; white-space: nowrap; }
+        .quick-action-btn:hover { background: #0056b3; transform: translateY(-1px); }
+        .quick-action-btn.secondary { background: #6c757d; }
+        .quick-action-btn.secondary:hover { background: #545b62; }
+
+        /* --- SELETOR DE COLUNAS --- */
+        #columnControls { border: 1px solid #ddd; border-radius: 8px; padding: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .column-selector-header { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #007bff; }
+        .column-selector-header h4 { margin: 0; color: #007bff; font-size: 1.1em; font-weight: 600; }
+        .columns-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; max-height: 160px; overflow-y: auto; padding: 5px; }
+        .column-checkbox-item { display: flex; align-items: center; padding: 6px 8px; background: white; border: 1px solid #e0e0e0; border-radius: 4px; transition: all 0.2s ease; font-size: 0.8em; }
+        .column-checkbox-item:hover { background: #e3f2fd; border-color: #007bff; }
+        .column-checkbox-item input[type="checkbox"] { margin-right: 8px; }
+        .column-checkbox-item label { cursor: pointer; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        
+        /* --- TABELA E BARRA DE ROLAGEM DUPLA --- */
+        #top-scrollbar-container { overflow-x: auto; overflow-y: hidden; }
+        #top-scrollbar-content { height: 1px; }
+
+        .table-container { overflow-x: auto; margin-top: 5px; border: 1px solid #ddd; border-radius: 5px; position: relative; }
+        #mainTable { width: 100%; min-width: 1200px; border-collapse: collapse; font-size: 12px; }
+        #mainTable th { background-color: #007bff; color: white; padding: 10px 8px; text-align: center; font-weight: bold; border: 1px solid #0056b3; position: sticky; top: 0; z-index: 10; }
+        #mainTable td { padding: 8px; border: 1px solid #ddd; text-align: center; vertical-align: middle; }
+        #mainTable tr:nth-child(even) td { background-color: #f8f9fa; }
+        .hidden-column { display: none; }
+        .link-cell a { color: #007bff; text-decoration: underline; font-weight: bold; }
+        .ods-icon, .csc-pillar-icon { width: 30px; height: 30px; margin: 2px; border-radius: 3px; display: inline-block; object-fit: contain; }
+
+        /* --- SEÇÃO DE MÉTRICAS ODS --- */
+        .ods-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px; padding: 20px 0; }
+        .ods-card { background: white; border-radius: 8px; padding: 15px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); cursor: pointer; }
+        .ods-card .ods-icon { width: 50px; height: 50px; margin-bottom: 8px; }
+        .ods-title { font-weight: bold; font-size: 0.8rem; }
+        .ods-count { font-size: 1.5rem; font-weight: bold; color: #007bff; }
+    </style>
+</head>
+<body>
+    <div class="main-content-wrapper">
+        <header class="presentation-header">
+            <div class="flex justify-between items-center"><div class="flex items-center"><div class="relative logo-hover"><img src="./Logo-Estacio-Horizontal-Preto-1-300x101.png" alt="Logo Estácio" class="w-32 h-auto object-contain"/></div></div><div class="text-center flex-1 mx-8"><h1 class="text-2xl font-bold text-white mb-2">Cidades Inteligentes como Vetores para os ODS</h1><p class="text-blue-100 text-sm">Análise de Conteúdo - Planilha Estruturada</p></div><div class="text-right"><div class="font-bold text-xl"><span class="text-white">EDUCAR</span><span class="text-cyan-300 ml-2">PARA</span></div><div class="font-bold text-xl"><span class="text-cyan-300">TRANS</span><span class="text-white">FORMAR</span></div></div></div>
+            <div class="text-center mt-4 text-blue-100 text-xs"><div><strong>Universidade Estácio de Sá - UNESA</strong></div><div>Programa de Pós-Graduação em Administração e Desenvolvimento Empresarial • Mestrado em Administração e Desenvolvimento Empresarial</div></div>
+        </header>
+
+        <main class="flex-1">
+            <div class="container">
+                <div class="view-toggle">
+                    <button class="toggle-btn active" id="btnTableView">Visualizar Tabela</button>
+                    <button class="toggle-btn" id="btnMetricsView">Visualizar Métricas ODS</button>
+                </div>
+
+                <div id="columnControls">
+                    <div class="column-selector-header"><h4>🔧 Seleção de Colunas da Tabela</h4></div>
+                    <div class="quick-actions">
+                        <button id="btnSelectAll" class="quick-action-btn">Todas</button>
+                        <button id="btnSelectMetadata" class="quick-action-btn">Metadados</button>
+                        <button id="btnSelectTech" class="quick-action-btn">Tecnologias</button>
+                        <button id="btnSelectODS" class="quick-action-btn">ODS</button>
+                        <button id="btnSelectCSC" class="quick-action-btn">CSC</button>
+                        <button id="btnClearAll" class="quick-action-btn secondary">Limpar</button>
+                    </div>
+                    <div class="columns-grid" id="checkboxContainer"></div>
+                </div>
+                
+                <div id="metricsSection" class="hidden">
+                    <h2>Métricas Gerais dos ODS</h2>
+                    <div class="ods-grid" id="odsGrid"></div>
+                </div>
+
+                <div id="top-scrollbar-container"><div id="top-scrollbar-content"></div></div>
+                <div class="table-container" id="tableSection">
+                    <table id="mainTable"><thead id="tableHeader"></thead><tbody id="tableBody"></tbody></table>
+                </div>
+
+                <div class="details-panel" id="detailsPanel"></div>
+            </div>
+        </main>
+
+        <footer class="presentation-footer">
+            <div class="absolute inset-0 flex items-center justify-center geometric-pattern"><div class="w-8 h-8 bg-white bg-opacity-20 transform rotate-45 mx-1 rotating-square"></div><div class="w-6 h-6 bg-cyan-300 bg-opacity-40 transform rotate-45 slow-rotating" style="animation-delay: 0.5s"></div><div class="w-8 h-8 border-2 border-white border-opacity-60 transform rotate-45 rotating-square" style="animation-delay: 1s"></div><div class="w-6 h-6 bg-blue-200 bg-opacity-30 transform rotate-45 slow-rotating" style="animation-delay: 1.5s"></div></div>
+        </footer>
+    </div>
+
+    <script src="dados_javascript.js"></script>
+    <script>
+        const appState = { tableData: [], columnNames: [], currentViewMode: 'all', odsMetrics: {}, isSyncingScroll: false };
+
+        const config = {
+            columnProfiles: {
+                'all': null,
+                'metadata': ["ID", "Link", "Autores", "Título", "Ano de Publicação", "Periódico", "Idioma", "DOI", "ISSN", "Status"],
+                'ods': ['ID', 'Título', 'Autores', 'Ano de Publicação', 'ODS Mencionados pelos Autores', 'Trechos correlações'],
+                'csc': ['ID', 'Título', 'Autores', 'Ano de Publicação', 'Indicadores CSC', 'Pilar CSC'],
+                'technology': ['ID', 'Título', 'Autores', 'Ano de Publicação', 'Palavras Chave', 'Palavras chave normalizadas e Traduzidas', 'Aspecto Principal - Estudo', 'Categorias'],
+                'none': []
+            },
+            // CORREÇÃO: Objeto de ícones restaurado com chaves de texto e numéricas para garantir a correspondência
+            odsIcons: {
+                'ODS 1': 'Ícones oficiais - ODS/SDG-icon-PT--01-2-01.png', 'ODS 2': 'Ícones oficiais - ODS/SDG-icon-PT--02-2.png', 'ODS 3': 'Ícones oficiais - ODS/SDG-icon-PT--03-2.png', 'ODS 4': 'Ícones oficiais - ODS/SDG-icon-PT--04-2-01.png', 'ODS 5': 'Ícones oficiais - ODS/SDG-icon-PT--05-2.png', 'ODS 6': 'Ícones oficiais - ODS/SDG-icon-PT--06-2-01.png', 'ODS 7': 'Ícones oficiais - ODS/SDG-icon-PT--07-2-01.png', 'ODS 8': 'Ícones oficiais - ODS/SDG-icon-PT--08-2-01.png', 'ODS 9': 'Ícones oficiais - ODS/SDG-icon-PT--09-2.png', 'ODS 10': 'Ícones oficiais - ODS/SDG-icon-PT--10-2.png', 'ODS 11': 'Ícones oficiais - ODS/SDG-icon-PT--11-2.png', 'ODS 12': 'Ícones oficiais - ODS/SDG-icon-PT--12-2-01.png', 'ODS 13': 'Ícones oficiais - ODS/SDG-icon-PT--13-2.png', 'ODS 14': 'Ícones oficiais - ODS/SDG-icon-PT--14-2-01.png', 'ODS 15': 'Ícones oficiais - ODS/SDG-icon-PT--15-2-01.png', 'ODS 16': 'Ícones oficiais - ODS/SDG-icon-PT--16-2.png', 'ODS 17': 'Ícones oficiais - ODS/SDG-icon-PT--17-2.png',
+                '1': 'Ícones oficiais - ODS/SDG-icon-PT--01-2-01.png', '2': 'Ícones oficiais - ODS/SDG-icon-PT--02-2.png', '3': 'Ícones oficiais - ODS/SDG-icon-PT--03-2.png', '4': 'Ícones oficiais - ODS/SDG-icon-PT--04-2-01.png', '5': 'Ícones oficiais - ODS/SDG-icon-PT--05-2.png', '6': 'Ícones oficiais - ODS/SDG-icon-PT--06-2-01.png', '7': 'Ícones oficiais - ODS/SDG-icon-PT--07-2-01.png', '8': 'Ícones oficiais - ODS/SDG-icon-PT--08-2-01.png', '9': 'Ícones oficiais - ODS/SDG-icon-PT--09-2.png', '10': 'Ícones oficiais - ODS/SDG-icon-PT--10-2.png', '11': 'Ícones oficiais - ODS/SDG-icon-PT--11-2.png', '12': 'Ícones oficiais - ODS/SDG-icon-PT--12-2-01.png', '13': 'Ícones oficiais - ODS/SDG-icon-PT--13-2.png', '14': 'Ícones oficiais - ODS/SDG-icon-PT--14-2-01.png', '15': 'Ícones oficiais - ODS/SDG-icon-PT--15-2-01.png', '16': 'Ícones oficiais - ODS/SDG-icon-PT--16-2.png', '17': 'Ícones oficiais - ODS/SDG-icon-PT--17-2.png',
+                'Geral': 'logo-sepado.png'
+            },
+            cscPillarIcons: {'Economia': 'ícones oficiais - CSC/Economia.png', 'Educação': 'ícones oficiais - CSC/Educação.png', 'Empreendedorismo': 'ícones oficiais - CSC/Empreendedorismo.png', 'Energia': 'ícones oficiais - CSC/Energia.png', 'Governança': 'ícones oficiais - CSC/Governança.png', 'Meio Ambiente': 'ícones oficiais - CSC/Meio Ambiente.png', 'Mobilidade': 'ícones oficiais - CSC/Mobilidade.png', 'Saúde': 'ícones oficiais - CSC/Saúde.png', 'Segurança': 'ícones oficiais - CSC/Segurança.png', 'Tecnologia e Inovação': 'ícones oficiais - CSC/Tecnologia e Inovação .png', 'Urbanismo': 'ícones oficiais - CSC/Urbanismo.png', 'ECO': 'ícones oficiais - CSC/Economia.png', 'EDU': 'ícones oficiais - CSC/Educação.png', 'EMP': 'ícones oficiais - CSC/Empreendedorismo.png', 'ENE': 'ícones oficiais - CSC/Energia.png', 'GOV': 'ícones oficiais - CSC/Governança.png', 'MAM': 'ícones oficiais - CSC/Meio Ambiente.png', 'MOB': 'ícones oficiais - CSC/Mobilidade.png', 'SAU': 'ícones oficiais - CSC/Saúde.png', 'SEG': 'ícones oficiais - CSC/Segurança.png', 'TIC': 'ícones oficiais - CSC/Tecnologia e Inovação .png', 'URB': 'ícones oficiais - CSC/Urbanismo.png'},
+            allColumnNames: ["ID", "Link", "Autores", "Título", "Ano de Publicação", "Periódico", "Idioma", "DOI", "ISSN", "Categorias", "Status", "Palavras Chave", "Palavras chave normalizadas e Traduzidas", "Trechos correlações", "ODS Mencionados pelos Autores", "Aspecto Principal - Estudo", "Indicadores CSC", "Pilar CSC", "CORPUS - IRAMUTEQ"]
+        };
+        
+        document.addEventListener('DOMContentLoaded', initializeApp);
+
+        function initializeApp() {
+            if (typeof data === 'undefined') { console.error('Dados não carregados!'); return; }
+            appState.tableData = data;
+            appState.columnNames = config.allColumnNames;
+            
+            createColumnCheckboxes();
+            renderTable();
+            bindEventListeners();
+            showTableView();
+        }
+
+        function bindEventListeners() {
+            document.getElementById('btnSelectAll').addEventListener('click', () => applyColumnProfile('all'));
+            document.getElementById('btnSelectMetadata').addEventListener('click', () => applyColumnProfile('metadata'));
+            document.getElementById('btnSelectTech').addEventListener('click', () => applyColumnProfile('technology'));
+            document.getElementById('btnSelectODS').addEventListener('click', () => applyColumnProfile('ods'));
+            document.getElementById('btnSelectCSC').addEventListener('click', () => applyColumnProfile('csc'));
+            document.getElementById('btnClearAll').addEventListener('click', () => applyColumnProfile('none'));
+            
+            document.getElementById('btnTableView').addEventListener('click', showTableView);
+            document.getElementById('btnMetricsView').addEventListener('click', showMetricsView);
+
+            const topScroll = document.getElementById('top-scrollbar-container');
+            const bottomScroll = document.getElementById('tableSection');
+
+            topScroll.addEventListener('scroll', () => {
+                if (appState.isSyncingScroll) return;
+                appState.isSyncingScroll = true;
+                bottomScroll.scrollLeft = topScroll.scrollLeft;
+                appState.isSyncingScroll = false;
+            });
+
+            bottomScroll.addEventListener('scroll', () => {
+                if (appState.isSyncingScroll) return;
+                appState.isSyncingScroll = true;
+                topScroll.scrollLeft = bottomScroll.scrollLeft;
+                appState.isSyncingScroll = false;
+            });
+        }
+
+        function applyColumnProfile(profileName) {
+            appState.currentViewMode = profileName;
+            const columnsToShow = config.columnProfiles[profileName];
+            document.querySelectorAll('#checkboxContainer input').forEach(checkbox => {
+                const columnName = appState.columnNames[parseInt(checkbox.value)];
+                checkbox.checked = columnsToShow === null || columnsToShow.includes(columnName);
+            });
+            renderTable();
+        }
+
+        function createColumnCheckboxes() {
+            const container = document.getElementById('checkboxContainer');
+            container.innerHTML = appState.columnNames.map((columnName, index) => `
+                <div class="column-checkbox-item">
+                    <input type="checkbox" id="col_${index}" value="${index}" checked>
+                    <label for="col_${index}" title="${columnName}">${columnName}</label>
+                </div>`).join('');
+            container.querySelectorAll('input').forEach(cb => cb.addEventListener('change', renderTable));
+        }
+        
+        function renderTable() {
+            const headerContainer = document.getElementById('tableHeader');
+            const bodyContainer = document.getElementById('tableBody');
+            const visibleColumns = new Set(Array.from(document.querySelectorAll('#checkboxContainer input:checked')).map(cb => parseInt(cb.value)));
+
+            headerContainer.innerHTML = `<tr>${appState.columnNames.filter((_, i) => visibleColumns.has(i)).map(name => `<th>${name}</th>`).join('')}</tr>`;
+
+            // Colunas que devem ser truncadas no modo "Todas"
+            const columnsToTruncate = [
+                'Trechos correlações', 
+                'Palavras Chave', 
+                'Palavras chave normalizadas e Traduzidas', 
+                'Indicadores CSC', 
+                'CORPUS - IRAMUTEQ',
+                'Aspecto Principal - Estudo',
+                'Categorias'
+            ];
+
+            bodyContainer.innerHTML = appState.tableData.map((row, rowIndex) => {
+                return `<tr>${appState.columnNames.map((colName, colIndex) => {
+                    if (!visibleColumns.has(colIndex)) return '';
+                    let cellValue = row[colName] || '';
+                    let cellHtml = cellValue;
+
+                    if (colName === 'ID' && row['Link']) {
+                        cellHtml = `<a href="${row['Link']}" target="_blank" class="link-cell">${cellValue}</a>`;
+                    } else if (colName === 'ODS Mencionados pelos Autores') {
+                        cellHtml = formatODSCell(cellValue);
+                    } else if (colName === 'Pilar CSC') {
+                        cellHtml = formatCSCPillarCell(cellValue);
+                    } else if (appState.currentViewMode === 'all' && columnsToTruncate.includes(colName) && cellValue && String(cellValue).length > 50) {
+                        // Aplicar truncamento apenas no modo "Todas" para colunas específicas
+                        const truncatedText = String(cellValue).substring(0, 50);
+                        const uniqueId = `truncated_${rowIndex}_${colIndex}`;
+                        cellHtml = `
+                            <div class="truncated-content">
+                                <span id="${uniqueId}_short">${truncatedText}...</span>
+                                <span id="${uniqueId}_full" style="display: none;">${cellValue}</span>
+                                <br>
+                                <button 
+                                    id="${uniqueId}_btn" 
+                                    class="expand-btn" 
+                                    onclick="toggleTruncatedText('${uniqueId}')"
+                                    style="font-size: 10px; padding: 2px 6px; margin-top: 3px; background: #007bff; color: white; border: none; border-radius: 3px; cursor: pointer;">
+                                    Ver mais
+                                </button>
+                            </div>
+                        `;
+                    }
+                    return `<td>${cellHtml}</td>`;
+                }).join('')}</tr>`;
+            }).join('');
+
+            const mainTable = document.getElementById('mainTable');
+            const topScrollContent = document.getElementById('top-scrollbar-content');
+            if (mainTable && topScrollContent) {
+                topScrollContent.style.width = `${mainTable.scrollWidth}px`;
+            }
+        }
+        
+        // CORREÇÃO: Função de formatação de ODS agora é mais robusta
+        function formatODSCell(value) {
+            if (!value) return '';
+            
+            // Lida com múltiplos ODS na mesma célula (separados por vírgula ou ponto e vírgula)
+            const odsItems = String(value).split(/[,;]/).map(item => item.trim()).filter(Boolean);
+
+            const htmlItems = odsItems.map(item => {
+                // Tenta encontrar o ícone pela chave de texto (ex: "ODS 7") ou pela chave numérica (ex: "7")
+                const numericKey = item.match(/\d+/);
+                const iconPath = config.odsIcons[item] || (numericKey ? config.odsIcons[numericKey[0]] : null);
+
+                if (iconPath) {
+                    return `<div style="display: inline-flex; flex-direction: column; align-items: center; margin: 2px; gap: 4px;">
+                                <img src="${iconPath}" alt="${item}" class="ods-icon" title="${item}">
+                                <span style="font-size: 10px; line-height: 1;">${item}</span>
+                            </div>`;
+                }
+                return `<span>${item}</span>`; // Se não encontrar ícone, mostra o texto
+            });
+            
+            return `<div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start;">${htmlItems.join('')}</div>`;
+        }
+
+        function formatCSCPillarCell(value) {
+            if (!value) return '';
+            const pillars = String(value).split(',').map(p => p.trim()).filter(Boolean);
+            const iconsHtml = pillars.map(pillar => {
+                const iconPath = config.cscPillarIcons[pillar];
+                return iconPath ? `<img src="${iconPath}" alt="${pillar}" class="csc-pillar-icon" title="${pillar}">` : '';
+            }).join('');
+            return `<div style="display: flex; flex-direction: column; align-items: center; gap: 4px;"><div>${iconsHtml}</div><span style="font-size: 10px; line-height: 1;">${value}</span></div>`;
+        }
+
+        function showTableView() {
+            document.getElementById('tableSection').classList.remove('hidden');
+            document.getElementById('top-scrollbar-container').classList.remove('hidden');
+            document.getElementById('columnControls').classList.remove('hidden');
+            document.getElementById('metricsSection').classList.add('hidden');
+            document.getElementById('btnTableView').classList.add('active');
+            document.getElementById('btnMetricsView').classList.remove('active');
+        }
+
+        function showMetricsView() {
+            document.getElementById('tableSection').classList.add('hidden');
+            document.getElementById('top-scrollbar-container').classList.add('hidden');
+            document.getElementById('columnControls').classList.add('hidden');
+            document.getElementById('metricsSection').classList.remove('hidden');
+            document.getElementById('btnTableView').classList.remove('active');
+            document.getElementById('btnMetricsView').classList.add('active');
+            
+            calculateOdsMetrics();
+            renderOdsCards();
+        }
+        
+        function calculateOdsMetrics() {
+            const metrics = {};
+            const odsData = appState.tableData.map(row => row['ODS Mencionados pelos Autores']).filter(Boolean);
+            
+            odsData.forEach(cellValue => {
+                const odsItems = String(cellValue).split(/[,;]/).map(item => item.trim()).filter(Boolean);
+                odsItems.forEach(item => {
+                     // Normaliza para a chave principal "ODS X"
+                    const numericKey = item.match(/\d+/);
+                    const primaryKey = numericKey ? `ODS ${numericKey[0]}` : item;
+                    if(config.odsIcons[primaryKey]) {
+                        if (!metrics[primaryKey]) {
+                            metrics[primaryKey] = { count: 0 };
+                        }
+                        metrics[primaryKey].count++;
+                    }
+                });
+            });
+            appState.odsMetrics = metrics;
+        }
+
+        function renderOdsCards() {
+            const grid = document.getElementById('odsGrid');
+            const sortedMetrics = Object.entries(appState.odsMetrics).sort((a, b) => {
+                 const numA = parseInt(a[0].match(/\d+/)[0]);
+                 const numB = parseInt(b[0].match(/\d+/)[0]);
+                 return numA - numB;
+            });
+
+            grid.innerHTML = sortedMetrics.map(([ods, data]) => {
+                if (data.count === 0) return '';
+                return `<div class="ods-card"><img src="${config.odsIcons[ods]}" class="ods-icon"><div class="ods-title">${ods}</div><div class="ods-count">${data.count}</div></div>`;
+            }).join('');
+        }
+
+        // Função para alternar entre texto truncado e completo
+        function toggleTruncatedText(uniqueId) {
+            const shortText = document.getElementById(`${uniqueId}_short`);
+            const fullText = document.getElementById(`${uniqueId}_full`);
+            const button = document.getElementById(`${uniqueId}_btn`);
+            
+            if (shortText && fullText && button) {
+                if (fullText.style.display === 'none') {
+                    // Mostrar texto completo
+                    shortText.style.display = 'none';
+                    fullText.style.display = 'inline';
+                    button.textContent = 'Ver menos';
+                    button.style.background = '#6c757d';
+                } else {
+                    // Mostrar texto truncado
+                    shortText.style.display = 'inline';
+                    fullText.style.display = 'none';
+                    button.textContent = 'Ver mais';
+                    button.style.background = '#007bff';
+                }
+            }
+        }
+    </script>
+</body>
+</html>

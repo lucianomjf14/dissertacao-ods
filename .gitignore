@@ -1,5 +1,13 @@
 # Arquivos e pastas a serem ignorados no Git
 
+# Arquivos Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+.venv/
+venv/
+
 # Arquivos temporários
 *.tmp
 *.temp
@@ -8,16 +16,26 @@
 # Arquivos de sistema
 .DS_Store
 Thumbs.db
+desktop.ini
 
 # Arquivos de backup
 *.bak
 *.backup
+backup_*/
 
 # Logs
 *.log
 
 # Ambiente de desenvolvimento local
 .vscode/
+
+# Diretórios de deploy temporários (evitar recursão)
+deploy-github/
+dissertacao-ods/
+
+# Documentos pessoais (manter apenas os necessários)
+*.docx
+*.xlsx
 .idea/
 
 # Não incluir arquivos Excel originais por questões de tamanho

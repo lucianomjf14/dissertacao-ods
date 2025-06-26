@@ -1,0 +1,26 @@
+{
+  "name": "dissertacao-ods-visualizacao",
+  "version": "1.0.0",
+  "description": "Aplicação de visualização interativa dos dados da dissertação sobre Cidades Inteligentes e ODS",
+  "main": "index.html",
+  "scripts": {
+    "build": "powershell -ExecutionPolicy Bypass -File build.ps1",
+    "dev": "start index.html",
+    "deploy": "npm run build && git add . && git commit -m \"Deploy: Atualização da aplicação\" && git push origin master"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lucianomjf14/dissertacao-ods.git"
+  },
+  "homepage": "https://lucianomjf14.github.io/dissertacao-ods/",
+  "author": "Luciano Marinho Silveira",
+  "license": "MIT",
+  "keywords": [
+    "ODS",
+    "Cidades Inteligentes",
+    "Visualização de Dados",
+    "GitHub Pages",
+    "HTML",
+    "JavaScript"
+  ]
+}

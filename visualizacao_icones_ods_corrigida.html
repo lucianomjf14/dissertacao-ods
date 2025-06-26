@@ -231,6 +231,9 @@
 
                     if (colName === 'ID' && row['Link']) {
                         cellHtml = `<a href="${row['Link']}" target="_blank" class="link-cell">${cellValue}</a>`;
+                    } else if (colName === 'Link' && cellValue) {
+                        // Tornar a coluna Link clicável
+                        cellHtml = `<a href="${cellValue}" target="_blank" class="link-cell" title="Abrir link em nova aba">${cellValue}</a>`;
                     } else if (colName === 'ODS Mencionados pelos Autores') {
                         cellHtml = formatODSCell(cellValue);
                     } else if (colName === 'Pilar CSC') {

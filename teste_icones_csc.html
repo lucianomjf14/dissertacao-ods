@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Teste de Ícones CSC</title>
+    <style>
+        .csc-pillar-icon {
+            width: 30px;
+            height: 30px;
+            margin: 2px;
+            border-radius: 3px;
+            display: inline-block;
+            object-fit: contain;
+            border: 1px solid #ccc;
+        }
+        .teste-container {
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Teste de Ícones dos Pilares CSC</h1>
+    
+    <div class="teste-container">
+        <h2>Teste Individual dos Ícones:</h2>
+        <p>ECO (Economia): <img src="ícones oficiais - CSC/Economia.png" class="csc-pillar-icon" alt="ECO" title="Economia"></p>
+        <p>EDU (Educação): <img src="ícones oficiais - CSC/Educação.png" class="csc-pillar-icon" alt="EDU" title="Educação"></p>
+        <p>EMP (Empreendedorismo): <img src="ícones oficiais - CSC/Empreendedorismo.png" class="csc-pillar-icon" alt="EMP" title="Empreendedorismo"></p>
+        <p>ENE (Energia): <img src="ícones oficiais - CSC/Energia.png" class="csc-pillar-icon" alt="ENE" title="Energia"></p>
+        <p>GOV (Governança): <img src="ícones oficiais - CSC/Governança.png" class="csc-pillar-icon" alt="GOV" title="Governança"></p>
+        <p>MAM (Meio Ambiente): <img src="ícones oficiais - CSC/Meio Ambiente.png" class="csc-pillar-icon" alt="MAM" title="Meio Ambiente"></p>
+        <p>MOB (Mobilidade): <img src="ícones oficiais - CSC/Mobilidade.png" class="csc-pillar-icon" alt="MOB" title="Mobilidade"></p>
+        <p>SAU (Saúde): <img src="ícones oficiais - CSC/Saúde.png" class="csc-pillar-icon" alt="SAU" title="Saúde"></p>
+        <p>SEG (Segurança): <img src="ícones oficiais - CSC/Segurança.png" class="csc-pillar-icon" alt="SEG" title="Segurança"></p>
+        <p>TIC (Tecnologia e Inovação): <img src="ícones oficiais - CSC/Tecnologia e Inovação .png" class="csc-pillar-icon" alt="TIC" title="Tecnologia e Inovação"></p>
+        <p>URB (Urbanismo): <img src="ícones oficiais - CSC/Urbanismo.png" class="csc-pillar-icon" alt="URB" title="Urbanismo"></p>
+    </div>
+    
+    <div class="teste-container">
+        <h2>Teste da Função formatCSCPillarCell:</h2>
+        <div id="resultado-teste"></div>
+    </div>
+
+    <script>
+        // Mapeamento de ícones CSC
+        const cscPillarIcons = {
+            'ECO': 'ícones oficiais - CSC/Economia.png',
+            'EDU': 'ícones oficiais - CSC/Educação.png',
+            'EMP': 'ícones oficiais - CSC/Empreendedorismo.png',
+            'ENE': 'ícones oficiais - CSC/Energia.png',
+            'GOV': 'ícones oficiais - CSC/Governança.png',
+            'MAM': 'ícones oficiais - CSC/Meio Ambiente.png',
+            'MOB': 'ícones oficiais - CSC/Mobilidade.png',
+            'SAU': 'ícones oficiais - CSC/Saúde.png',
+            'SEG': 'ícones oficiais - CSC/Segurança.png',
+            'TIC': 'ícones oficiais - CSC/Tecnologia e Inovação .png',
+            'URB': 'ícones oficiais - CSC/Urbanismo.png'
+        };
+
+        // Função para formatar célula CSC
+        function formatCSCPillarCell(value) {
+            if (!value) return '';
+            
+            const valueStr = String(value).trim();
+            
+            // Dividir os pilares por vírgula e limpar espaços
+            const pillars = valueStr.split(',').map(pillar => pillar.trim()).filter(pillar => pillar);
+            
+            if (pillars.length === 0) return valueStr;
+            
+            // Gerar ícones para cada pilar encontrado
+            const icons = pillars.map(pillar => {
+                const iconPath = cscPillarIcons[pillar];
+                if (iconPath) {
+                    return `<img src="${iconPath}" alt="${pillar}" class="csc-pillar-icon" title="${pillar}">`;
+                }
+                return '';
+            }).filter(icon => icon !== '').join(' ');
+            
+            if (icons) {
+                return `<div style="display: flex; flex-direction: column; align-items: center; gap: 5px;">
+                    <div style="display: flex; justify-content: center; gap: 3px; flex-wrap: wrap;">${icons}</div>
+                    <span style="font-size: 11px; text-align: center; line-height: 1.2;">${valueStr}</span>
+                </div>`;
+            }
+            
+            return valueStr;
+        }
+
+        // Testar a função
+        const exemplosDados = [
+            'ECO, ENE, GOV, MAM, MOB, SAU, SEG, TIC, URB',
+            'ENE, GOV, MAM, MOB, SAU, TIC, URB',
+            'EDU, ENE, GOV, MAM, MOB, SAU, SEG, TIC, URB'
+        ];
+
+        let resultadoHTML = '<h3>Resultados dos Testes:</h3>';
+        exemplosDados.forEach((exemplo, index) => {
+            const resultado = formatCSCPillarCell(exemplo);
+            resultadoHTML += `<div style="margin: 10px 0; padding: 10px; border: 1px solid #eee;">
+                <strong>Teste ${index + 1}:</strong> ${exemplo}<br>
+                <strong>Resultado:</strong> ${resultado}
+            </div>`;
+        });
+
+        document.getElementById('resultado-teste').innerHTML = resultadoHTML;
+    </script>
+</body>
+</html>

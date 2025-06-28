@@ -1,0 +1,145 @@
+RELATÓRIO DE AUDITORIA - CORREÇÕES NECESSÁRIAS NO DOCUMENTO
+================================================================
+
+Data da Auditoria: 22 de junho de 2025
+Arquivo Analisado: C:\Users\lucia\Dissertação\4.2 RESULTADOS DA ANÁLISE DE CONTEÚ.txt
+Fonte de Dados: Análise de Conteúdo - Luciano 22_06.xlsx
+
+RESUMO EXECUTIVO
+================
+
+Taxa de Precisão: 17.4% (4 de 23 verificações corretas)
+Status: NECESSÁRIA REVISÃO URGENTE
+
+PRINCIPAIS DIVERGÊNCIAS ENCONTRADAS
+===================================
+
+1. DADOS DOS ODS - CORREÇÕES CRÍTICAS NECESSÁRIAS
+--------------------------------------------------
+
+ODS 11 (Cidades e Comunidades Sustentáveis):
+❌ ERRO: Documento afirma "20 menções diretas (48,78% dos estudos)"
+✅ CORRETO: 22 menções diretas (53,66% dos estudos)
+📝 AÇÃO: Alterar no documento de 20 para 22 menções e de 48,78% para 53,66%
+
+ODS 7 (Energia Limpa e Acessível):
+❌ ERRO: Documento afirma "mencionado em 9 artigos (21,95%)"
+✅ CORRETO: mencionado em 10 artigos (24,39%)
+📝 AÇÃO: Alterar no documento de 9 para 10 artigos e de 21,95% para 24,39%
+
+ODS 9 (Indústria, Inovação e Infraestrutura):
+❌ ERRO: Documento afirma "8 menções (19,51%)"
+✅ CORRETO: 11 menções (26,83%)
+📝 AÇÃO: Alterar no documento de 8 para 11 menções e de 19,51% para 26,83%
+
+ODS 13 (Ação Climática):
+❌ ERRO: Documento afirma "8 artigos (19,51%)"
+✅ CORRETO: 9 artigos (21,95%)
+📝 AÇÃO: Alterar no documento de 8 para 9 artigos e de 19,51% para 21,95%
+
+ODS 1 (Erradicação da Pobreza):
+❌ ERRO CRÍTICO: Documento afirma "mencionado apenas uma vez (2,44% dos estudos)"
+✅ CORRETO: mencionado em 23 artigos (56,1% dos estudos)
+📝 AÇÃO: REVISÃO COMPLETA - Esta é uma divergência muito significativa que requer investigação
+
+ODS 14 (Vida na Água):
+❌ ERRO: Documento afirma "mencionado apenas uma vez (2,44% dos estudos)"
+✅ CORRETO: não mencionado (0% dos estudos)
+📝 AÇÃO: Alterar no documento para "não mencionado"
+
+2. DADOS DAS TECNOLOGIAS - CORREÇÕES NECESSÁRIAS
+------------------------------------------------
+
+Internet das Coisas (IoT):
+❌ ERRO: Documento afirma "22 estudos (53,7%)"
+✅ CORRETO: 11 estudos (26,8%)
+📝 AÇÃO: Alterar no documento de 22 para 11 estudos e de 53,7% para 26,8%
+
+Inteligência Artificial (IA):
+❌ ERRO: Documento afirma "19 estudos (46,3%)"
+✅ CORRETO: 9 estudos (22,0%)
+📝 AÇÃO: Alterar no documento de 19 para 9 estudos e de 46,3% para 22,0%
+
+Big Data e Análise de Dados:
+❌ ERRO: Documento afirma "15 estudos (36,6%)"
+✅ CORRETO: 3 estudos (7,3%)
+📝 AÇÃO: Alterar no documento de 15 para 3 estudos e de 36,6% para 7,3%
+
+Gêmeos Digitais (Digital Twins):
+❌ ERRO: Documento afirma "8 estudos (19,5%)"
+✅ CORRETO: 0 estudos (0%)
+📝 AÇÃO: Remover ou reformular esta seção, pois não há registros na planilha
+
+Metaverso e Realidade Aumentada:
+❌ ERRO: Documento afirma "5 estudos (12,2%)"
+✅ CORRETO: 2 estudos (4,9%)
+📝 AÇÃO: Alterar no documento de 5 para 2 estudos e de 12,2% para 4,9%
+
+Impressão 3D e Fabricação Digital:
+❌ ERRO: Documento afirma "3 estudos (7,3%)"
+✅ CORRETO: 1 estudo (2,4%)
+📝 AÇÃO: Alterar no documento de 3 para 1 estudo e de 7,3% para 2,4%
+
+3. QUESTÕES ESTRUTURAIS IDENTIFICADAS
+-------------------------------------
+
+3.1 Mapeamento de Pilares CSC:
+⚠️ PROBLEMA: O documento menciona pilares com nomes completos, mas a planilha usa siglas
+📊 PLANILHA CONTÉM: ECO, ENE, GOV, MAM, MOB, SAU, SEG, TIC, URB, EDU, EMP
+📝 NECESSÁRIO: Verificar se o mapeamento entre siglas e nomes completos está correto
+
+3.2 Informações que Requerem Análise Manual:
+- Perspectiva sociotécnica (73% dos estudos)
+- Dados de governança e participação cidadã
+- Análises qualitativas sobre dimensões sociais
+- Conexões específicas entre indicadores CSC e ODS
+
+RECOMENDAÇÕES DE AÇÃO
+=====================
+
+PRIORIDADE ALTA - Correções Imediatas:
+1. Revisar e corrigir TODOS os números dos ODS no documento
+2. Revisar e corrigir TODOS os números das tecnologias no documento
+3. Investigar a discrepância crítica do ODS 1 (1 vs 23 menções)
+4. Verificar metodologia de contagem utilizada no documento original
+
+PRIORIDADE MÉDIA - Verificações Adicionais:
+1. Realizar análise manual de conteúdo para validar informações qualitativas
+2. Verificar mapeamento correto entre siglas e nomes dos pilares CSC
+3. Revisar percentuais de perspectiva sociotécnica
+4. Validar informações sobre governança e participação
+
+PRIORIDADE BAIXA - Melhorias:
+1. Padronizar metodologia de contagem
+2. Documentar critérios de classificação utilizados
+3. Criar sistema de validação cruzada para futuras análises
+
+OBSERVAÇÕES IMPORTANTES
+=======================
+
+1. A baixa taxa de precisão (17,4%) indica problemas sistemáticos na metodologia de contagem ou na fonte dos dados utilizados no documento.
+
+2. A discrepância do ODS 1 (1 vs 23) é particularmente preocupante e pode indicar:
+   - Erro na interpretação dos dados da planilha
+   - Diferença nos critérios de contagem
+   - Possível confusão entre diferentes categorias de dados
+
+3. As diferenças nas tecnologias sugerem que pode ter havido uma análise baseada em diferentes critérios ou fonte de dados.
+
+4. É recomendável uma revisão completa da metodologia antes de fazer as correções.
+
+STATUS FINAL
+============
+
+🚨 AÇÃO REQUERIDA: Revisão completa do documento necessária antes da publicação
+📋 PRIORIDADE: ALTA
+⏰ PRAZO SUGERIDO: Imediato
+
+ARQUIVOS GERADOS
+=================
+
+1. relatorio_auditoria_dissertacao.json - Relatório técnico detalhado
+2. Este documento - Resumo executivo com ações corretivas
+
+Data: 22/06/2025
+Responsável: Sistema de Auditoria Automatizada

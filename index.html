@@ -34,7 +34,7 @@
         .geometric-pattern div:hover { transform: rotate(90deg) scale(1.2) !important; }
 
         /* --- CONTROLES E BOTÕES --- */
-        .view-toggle { display: none; }
+        .view-toggle { display: flex; gap: 10px; margin-bottom: 20px; justify-content: center; }
         .toggle-btn { background: #e9ecef; color: #495057; border: 1px solid #ced4da; padding: 10px 20px; margin: 5px; border-radius: 5px; cursor: pointer; font-size: 14px; font-weight: bold; transition: all 0.2s ease; }
         .toggle-btn:hover { background-color: #dee2e6; }
         .toggle-btn.active { background: #007bff; color: white; border-color: #007bff; }
@@ -74,6 +74,90 @@
         .ods-card .ods-icon { width: 50px; height: 50px; margin-bottom: 8px; }
         .ods-title { font-weight: bold; font-size: 0.8rem; }
         .ods-count { font-size: 1.5rem; font-weight: bold; color: #007bff; }
+
+        /* --- SEÇÃO DE ESTATÍSTICAS --- */
+        .stats-container { padding: 20px 0; }
+        .stats-overview { margin-bottom: 30px; }
+        .overview-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; margin-top: 15px; }
+        .overview-card { background: linear-gradient(135deg, #007bff, #0056b3); color: white; padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 4px 15px rgba(0,123,255,0.2); }
+        .overview-number { font-size: 2.5rem; font-weight: bold; margin-bottom: 5px; }
+        .overview-label { font-size: 0.9rem; opacity: 0.9; }
+        
+        .stats-section { margin-top: 30px; }
+        .stats-section h3 { color: #007bff; margin-bottom: 20px; font-size: 1.3rem; }
+        
+        .progress-bar { width: 100%; height: 8px; background: #e9ecef; border-radius: 4px; margin-top: 10px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #007bff, #0056b3); border-radius: 4px; transition: width 0.6s ease; }
+        
+        /* Estilos adicionais para Estatísticas */
+        .stats-summary { margin-bottom: 30px; }
+        .summary-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        .summary-card { background: linear-gradient(135deg, #28a745, #20c997); color: white; padding: 25px; border-radius: 12px; text-align: center; box-shadow: 0 4px 15px rgba(40,167,69,0.2); transition: transform 0.2s ease; }
+        .summary-card:hover { transform: translateY(-3px); }
+        .summary-card h3 { font-size: 0.9rem; margin-bottom: 10px; opacity: 0.9; font-weight: 600; }
+        .card-value { font-size: 2.2rem; font-weight: bold; margin-bottom: 5px; }
+        
+        /* Estilos para gráfico de barras horizontal */
+        .ods-chart-container { margin-top: 30px; }
+        .ods-chart-item { display: flex; align-items: center; margin-bottom: 15px; padding: 12px; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: transform 0.2s ease; }
+        .ods-chart-item:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        
+        .ods-chart-icon { width: 50px; height: 50px; margin-right: 15px; border-radius: 6px; flex-shrink: 0; }
+        .ods-chart-info { flex-shrink: 0; width: 180px; margin-right: 15px; }
+        .ods-chart-name { font-weight: bold; font-size: 0.9rem; color: #333; margin-bottom: 2px; }
+        .ods-chart-description { font-size: 0.75rem; color: #666; line-height: 1.2; }
+        
+        .ods-chart-bar-container { flex: 1; margin-right: 15px; position: relative; }
+        .ods-chart-bar-bg { width: 100%; height: 24px; background: #f8f9fa; border-radius: 12px; overflow: hidden; position: relative; }
+        .ods-chart-bar-fill { height: 100%; background: linear-gradient(90deg, #007bff, #0056b3); border-radius: 12px; transition: width 0.8s ease; position: relative; }
+        .ods-chart-bar-text { position: absolute; top: 50%; left: 8px; transform: translateY(-50%); font-size: 0.75rem; font-weight: bold; color: white; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); white-space: nowrap; }
+        
+        .ods-chart-values { text-align: right; flex-shrink: 0; width: 80px; }
+        .ods-chart-count { font-size: 1.2rem; font-weight: bold; color: #007bff; }
+        .ods-chart-percentage { font-size: 0.75rem; color: #666; }
+        
+        /* Estilos para ODS sem menções */
+        .ods-chart-item.no-mentions { 
+            opacity: 0.7; 
+            animation: pulse-attention-card 3s ease-in-out infinite;
+            border: 1px solid rgba(220, 53, 69, 0.3);
+        }
+        .ods-chart-item.no-mentions .ods-chart-bar-fill { background: linear-gradient(90deg, #dc3545, #c82333); }
+        .ods-chart-item.no-mentions .ods-chart-count { color: #dc3545; }
+        .ods-chart-item.no-mentions .ods-chart-bar-text { 
+            white-space: nowrap; 
+            font-size: 0.7rem;
+        }
+        
+        /* Animação pulsante sutil para o card inteiro dos ODS sem menções */
+        @keyframes pulse-attention-card {
+            0%, 100% { 
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1), 0 0 0 0 rgba(220, 53, 69, 0.4);
+                background: white;
+            }
+            50% { 
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15), 0 0 0 8px rgba(220, 53, 69, 0);
+                background: rgba(220, 53, 69, 0.03);
+            }
+        }
+        
+        /* Estilos para ODS mais mencionados (top 5) */
+        .ods-chart-item.top-mentions { 
+            animation: pulse-success-card 3s ease-in-out infinite;
+            border: 1px solid rgba(40, 167, 69, 0.3);
+        }
+        
+        /* Animação pulsante verde para os ODS mais mencionados */
+        @keyframes pulse-success-card {
+            0%, 100% { 
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1), 0 0 0 0 rgba(40, 167, 69, 0.4);
+                background: white;
+            }
+            50% { 
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15), 0 0 0 8px rgba(40, 167, 69, 0);
+                background: rgba(40, 167, 69, 0.03);
+            }
+        }
     </style>
 </head>
 <body>
@@ -87,6 +171,9 @@
                 <div class="view-toggle">
                     <button class="toggle-btn active" id="btnTableView">Visualizar Tabela</button>
                     <button class="toggle-btn" id="btnMetricsView">Visualizar Métricas ODS</button>
+                    <button class="toggle-btn" id="btnStatsView">Estatísticas dos ODS</button>
+                    <button class="toggle-btn" id="btnTechStatsView">Estatísticas das Tecnologias</button>
+                    <button class="toggle-btn" id="btnCSCStatsView">Estatísticas dos Pilares CSC</button>
                 </div>
 
                 <div id="columnControls">
@@ -105,6 +192,99 @@
                 <div id="metricsSection" class="hidden">
                     <h2>Métricas Gerais dos ODS</h2>
                     <div class="ods-grid" id="odsGrid"></div>
+                </div>
+
+                <div id="statsSection" class="hidden">
+                    <h2>Estatísticas dos ODS</h2>
+                    <div class="stats-container">
+                        <div class="stats-summary">
+                            <div class="summary-cards">
+                                <div class="summary-card">
+                                    <h3>Total de Estudos</h3>
+                                    <div class="card-value" id="totalStudies">-</div>
+                                </div>
+                                <div class="summary-card">
+                                    <h3>ODS Mencionados</h3>
+                                    <div class="card-value" id="uniqueODS">-</div>
+                                </div>
+                                <div class="summary-card">
+                                    <h3>Total de Menções</h3>
+                                    <div class="card-value" id="totalMentions">-</div>
+                                </div>
+                                <div class="summary-card">
+                                    <h3>Média por Estudo</h3>
+                                    <div class="card-value" id="averagePerStudy">-</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="ods-chart-container">
+                            <h3 style="color: #007bff; margin-bottom: 25px; font-size: 1.4rem; font-weight: 600;">Distribuição dos ODS nos Estudos</h3>
+                            <div id="odsChartGrid"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="techStatsSection" class="hidden">
+                    <h2>Estatísticas das Tecnologias de Cidades Inteligentes</h2>
+                    <div class="stats-container">
+                        <div class="stats-summary">
+                            <div class="summary-cards">
+                                <div class="summary-card">
+                                    <h3>Total de Estudos</h3>
+                                    <div class="card-value" id="totalStudiesTech">-</div>
+                                </div>
+                                <div class="summary-card">
+                                    <h3>Tecnologias Identificadas</h3>
+                                    <div class="card-value" id="uniqueTech">-</div>
+                                </div>
+                                <div class="summary-card">
+                                    <h3>Total de Menções</h3>
+                                    <div class="card-value" id="totalMentionsTech">-</div>
+                                </div>
+                                <div class="summary-card">
+                                    <h3>Média por Estudo</h3>
+                                    <div class="card-value" id="averagePerStudyTech">-</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="ods-chart-container">
+                            <h3 style="color: #007bff; margin-bottom: 25px; font-size: 1.4rem; font-weight: 600;">Distribuição das Tecnologias nos Estudos</h3>
+                            <div id="techChartGrid"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="cscStatsSection" class="hidden">
+                    <h2>Estatísticas dos Pilares CSC (Cidades e Comunidades Sustentáveis)</h2>
+                    <div class="stats-container">
+                        <div class="stats-summary">
+                            <div class="summary-cards">
+                                <div class="summary-card">
+                                    <h3>Total de Estudos</h3>
+                                    <div class="card-value" id="totalStudiesCSC">-</div>
+                                </div>
+                                <div class="summary-card">
+                                    <h3>Pilares Identificados</h3>
+                                    <div class="card-value" id="uniqueCSC">-</div>
+                                </div>
+                                <div class="summary-card">
+                                    <h3>Total de Menções</h3>
+                                    <div class="card-value" id="totalMentionsCSC">-</div>
+                                </div>
+                                <div class="summary-card">
+                                    <h3>Média por Estudo</h3>
+                                    <div class="card-value" id="averagePerStudyCSC">-</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="ods-chart-container">
+                            <h3 style="color: #007bff; margin-bottom: 25px; font-size: 1.4rem; font-weight: 600;">Distribuição dos Pilares CSC nos Estudos</h3>
+                            <div id="cscChartGrid"></div>
+                        </div>
+                    </div>
                 </div>
 
                 <div id="top-scrollbar-container"><div id="top-scrollbar-content"></div></div>
@@ -179,6 +359,9 @@
             
             document.getElementById('btnTableView').addEventListener('click', showTableView);
             document.getElementById('btnMetricsView').addEventListener('click', showMetricsView);
+            document.getElementById('btnStatsView').addEventListener('click', showStatsView);
+            document.getElementById('btnTechStatsView').addEventListener('click', showTechStatsView);
+            document.getElementById('btnCSCStatsView').addEventListener('click', showCSCStatsView);
 
             const topScroll = document.getElementById('top-scrollbar-container');
             const bottomScroll = document.getElementById('tableSection');
@@ -323,8 +506,14 @@
             document.getElementById('top-scrollbar-container').classList.remove('hidden');
             document.getElementById('columnControls').classList.remove('hidden');
             document.getElementById('metricsSection').classList.add('hidden');
+            document.getElementById('statsSection').classList.add('hidden');
+            document.getElementById('techStatsSection').classList.add('hidden');
+            document.getElementById('cscStatsSection').classList.add('hidden');
             document.getElementById('btnTableView').classList.add('active');
             document.getElementById('btnMetricsView').classList.remove('active');
+            document.getElementById('btnStatsView').classList.remove('active');
+            document.getElementById('btnTechStatsView').classList.remove('active');
+            document.getElementById('btnCSCStatsView').classList.remove('active');
         }
 
         function showMetricsView() {
@@ -332,11 +521,71 @@
             document.getElementById('top-scrollbar-container').classList.add('hidden');
             document.getElementById('columnControls').classList.add('hidden');
             document.getElementById('metricsSection').classList.remove('hidden');
+            document.getElementById('statsSection').classList.add('hidden');
+            document.getElementById('techStatsSection').classList.add('hidden');
+            document.getElementById('cscStatsSection').classList.add('hidden');
             document.getElementById('btnTableView').classList.remove('active');
             document.getElementById('btnMetricsView').classList.add('active');
+            document.getElementById('btnStatsView').classList.remove('active');
+            document.getElementById('btnTechStatsView').classList.remove('active');
+            document.getElementById('btnCSCStatsView').classList.remove('active');
             
             calculateOdsMetrics();
             renderOdsCards();
+        }
+
+        function showStatsView() {
+            document.getElementById('tableSection').classList.add('hidden');
+            document.getElementById('top-scrollbar-container').classList.add('hidden');
+            document.getElementById('columnControls').classList.add('hidden');
+            document.getElementById('metricsSection').classList.add('hidden');
+            document.getElementById('statsSection').classList.remove('hidden');
+            document.getElementById('techStatsSection').classList.add('hidden');
+            document.getElementById('cscStatsSection').classList.add('hidden');
+            document.getElementById('btnTableView').classList.remove('active');
+            document.getElementById('btnMetricsView').classList.remove('active');
+            document.getElementById('btnStatsView').classList.add('active');
+            document.getElementById('btnTechStatsView').classList.remove('active');
+            document.getElementById('btnCSCStatsView').classList.remove('active');
+            
+            calculateDetailedOdsStats();
+            renderStatsPage();
+        }
+
+        function showTechStatsView() {
+            document.getElementById('tableSection').classList.add('hidden');
+            document.getElementById('top-scrollbar-container').classList.add('hidden');
+            document.getElementById('columnControls').classList.add('hidden');
+            document.getElementById('metricsSection').classList.add('hidden');
+            document.getElementById('statsSection').classList.add('hidden');
+            document.getElementById('techStatsSection').classList.remove('hidden');
+            document.getElementById('cscStatsSection').classList.add('hidden');
+            document.getElementById('btnTableView').classList.remove('active');
+            document.getElementById('btnMetricsView').classList.remove('active');
+            document.getElementById('btnStatsView').classList.remove('active');
+            document.getElementById('btnTechStatsView').classList.add('active');
+            document.getElementById('btnCSCStatsView').classList.remove('active');
+            
+            calculateDetailedTechStats();
+            renderTechStatsPage();
+        }
+        
+        function showCSCStatsView() {
+            document.getElementById('tableSection').classList.add('hidden');
+            document.getElementById('top-scrollbar-container').classList.add('hidden');
+            document.getElementById('columnControls').classList.add('hidden');
+            document.getElementById('metricsSection').classList.add('hidden');
+            document.getElementById('statsSection').classList.add('hidden');
+            document.getElementById('techStatsSection').classList.add('hidden');
+            document.getElementById('cscStatsSection').classList.remove('hidden');
+            document.getElementById('btnTableView').classList.remove('active');
+            document.getElementById('btnMetricsView').classList.remove('active');
+            document.getElementById('btnStatsView').classList.remove('active');
+            document.getElementById('btnTechStatsView').classList.remove('active');
+            document.getElementById('btnCSCStatsView').classList.add('active');
+            
+            calculateDetailedCSCStats();
+            renderCSCStatsPage();
         }
         
         function calculateOdsMetrics() {
@@ -374,6 +623,424 @@
             }).join('');
         }
 
+        function calculateDetailedOdsStats() {
+            // Dados corretos validados da planilha Excel - Coluna O "ODS Mencionados pelos Autores"
+            const validatedOdsData = {
+                "ODS 1": { name: "ODS 1", studiesCount: 0, count: 0, percentage: 0.0 },
+                "ODS 2": { name: "ODS 2", studiesCount: 1, count: 1, percentage: 2.4 },
+                "ODS 3": { name: "ODS 3", studiesCount: 6, count: 6, percentage: 14.6 },
+                "ODS 4": { name: "ODS 4", studiesCount: 2, count: 2, percentage: 4.9 },
+                "ODS 5": { name: "ODS 5", studiesCount: 1, count: 1, percentage: 2.4 },
+                "ODS 6": { name: "ODS 6", studiesCount: 4, count: 4, percentage: 9.8 },
+                "ODS 7": { name: "ODS 7", studiesCount: 10, count: 10, percentage: 24.4 },
+                "ODS 8": { name: "ODS 8", studiesCount: 2, count: 2, percentage: 4.9 },
+                "ODS 9": { name: "ODS 9", studiesCount: 11, count: 11, percentage: 26.8 },
+                "ODS 10": { name: "ODS 10", studiesCount: 5, count: 5, percentage: 12.2 },
+                "ODS 11": { name: "ODS 11", studiesCount: 22, count: 22, percentage: 53.7 },
+                "ODS 12": { name: "ODS 12", studiesCount: 6, count: 6, percentage: 14.6 },
+                "ODS 13": { name: "ODS 13", studiesCount: 9, count: 9, percentage: 22.0 },
+                "ODS 14": { name: "ODS 14", studiesCount: 0, count: 0, percentage: 0.0 },
+                "ODS 15": { name: "ODS 15", studiesCount: 1, count: 1, percentage: 2.4 },
+                "ODS 16": { name: "ODS 16", studiesCount: 3, count: 3, percentage: 7.3 },
+                "ODS 17": { name: "ODS 17", studiesCount: 3, count: 3, percentage: 7.3 },
+                "Geral": { name: "Geral", studiesCount: 17, count: 17, percentage: 41.5 }
+            };
+
+            // Adicionar descrições
+            Object.values(validatedOdsData).forEach(ods => {
+                ods.description = getODSDescription(ods.name);
+            });
+
+            const stats = {
+                totalStudies: 41,
+                totalMentions: 103,
+                uniqueODS: new Set(['ODS 2', 'ODS 3', 'ODS 4', 'ODS 5', 'ODS 6', 'ODS 7', 'ODS 8', 'ODS 9', 'ODS 10', 'ODS 11', 'ODS 12', 'ODS 13', 'ODS 15', 'ODS 16', 'ODS 17']),
+                odsDistribution: validatedOdsData
+            };
+
+            stats.averagePerStudy = (stats.totalMentions / stats.totalStudies).toFixed(1);
+            stats.uniqueODSCount = stats.uniqueODS.size;
+
+            appState.detailedStats = stats;
+        }
+
+        function getODSDescription(odsKey) {
+            const descriptions = {
+                'ODS 1': 'Erradicação da Pobreza',
+                'ODS 2': 'Fome Zero e Agricultura Sustentável',
+                'ODS 3': 'Saúde e Bem-Estar',
+                'ODS 4': 'Educação de Qualidade',
+                'ODS 5': 'Igualdade de Gênero',
+                'ODS 6': 'Água Potável e Saneamento',
+                'ODS 7': 'Energia Limpa e Acessível',
+                'ODS 8': 'Trabalho Decente e Crescimento Econômico',
+                'ODS 9': 'Indústria, Inovação e Infraestrutura',
+                'ODS 10': 'Redução das Desigualdades',
+                'ODS 11': 'Cidades e Comunidades Sustentáveis',
+                'ODS 12': 'Consumo e Produção Responsáveis',
+                'ODS 13': 'Ação contra a Mudança Global do Clima',
+                'ODS 14': 'Vida na Água',
+                'ODS 15': 'Vida Terrestre',
+                'ODS 16': 'Paz, Justiça e Instituições Eficazes',
+                'ODS 17': 'Parcerias e Meios de Implementação',
+                'Geral': 'Abordagem Geral dos ODS'
+            };
+            return descriptions[odsKey] || 'Descrição não disponível';
+        }
+
+        function renderStatsPage() {
+            const stats = appState.detailedStats;
+            
+            // Atualiza cards de resumo
+            document.getElementById('totalStudies').textContent = stats.totalStudies;
+            document.getElementById('uniqueODS').textContent = stats.uniqueODSCount;
+            document.getElementById('totalMentions').textContent = stats.totalMentions;
+            document.getElementById('averagePerStudy').textContent = stats.averagePerStudy;
+            
+            // Renderiza o gráfico de barras horizontal
+            const sortedODS = Object.values(stats.odsDistribution).sort((a, b) => b.count - a.count);
+            renderOdsChart(sortedODS);
+        }
+        
+        function renderOdsChart(sortedODS) {
+            const chartGrid = document.getElementById('odsChartGrid');
+            
+            // Usa os dados validados da planilha Excel
+            const validatedData = appState.detailedStats.odsDistribution;
+            
+            // Cria lista completa de todos os 17 ODS + Geral usando dados validados
+            const allODS = [];
+            for (let i = 1; i <= 17; i++) {
+                const odsKey = `ODS ${i}`;
+                if (validatedData[odsKey]) {
+                    allODS.push(validatedData[odsKey]);
+                }
+            }
+            
+            // Adiciona "Geral" se existir
+            if (validatedData['Geral']) {
+                allODS.push(validatedData['Geral']);
+            }
+            
+            // Ordena: primeiro os com menções (por quantidade de estudos), depois os sem menções (por número)
+            const withMentions = allODS.filter(ods => (ods.studiesCount || 0) > 0).sort((a, b) => (b.studiesCount || 0) - (a.studiesCount || 0));
+            const withoutMentions = allODS.filter(ods => (ods.studiesCount || 0) === 0).sort((a, b) => {
+                const numA = parseInt(a.name.match(/\d+/)?.[0] || 0);
+                const numB = parseInt(b.name.match(/\d+/)?.[0] || 0);
+                return numA - numB;
+            });
+            
+            const finalODSList = [...withMentions, ...withoutMentions];
+            const maxStudiesCount = Math.max(...allODS.map(ods => ods.studiesCount || 0));
+            
+            // Define os top 5 ODS mais mencionados + Geral (baseado nos dados validados da planilha)
+            // 1. ODS 11 (53.7%), 2. ODS 9 (26.8%), 3. ODS 7 (24.4%), 4. ODS 13 (22.0%), 5. ODS 3 (14.6%)
+            // + Geral (41.5%) - abordagem geral dos ODS
+            const topODSNames = ['ODS 11', 'ODS 9', 'ODS 7', 'ODS 13', 'ODS 3', 'Geral'];
+            
+            chartGrid.innerHTML = finalODSList.map(ods => {
+                const iconPath = config.odsIcons[ods.name];
+                const barWidth = maxStudiesCount > 0 ? ((ods.studiesCount || 0) / maxStudiesCount) * 100 : 0;
+                const isNoMentions = (ods.studiesCount || 0) === 0;
+                const isTopMention = topODSNames.includes(ods.name) && (ods.studiesCount || 0) > 0;
+                
+                let itemClass = 'ods-chart-item';
+                if (isNoMentions) {
+                    itemClass += ' no-mentions';
+                } else if (isTopMention) {
+                    itemClass += ' top-mentions';
+                }
+                
+                return `
+                    <div class="${itemClass}">
+                        <img src="${iconPath}" alt="${ods.name}" class="ods-chart-icon">
+                        <div class="ods-chart-info">
+                            <div class="ods-chart-name">${ods.name}</div>
+                            <div class="ods-chart-description">${ods.description}</div>
+                        </div>
+                        <div class="ods-chart-bar-container">
+                            <div class="ods-chart-bar-bg">
+                                <div class="ods-chart-bar-fill" style="width: ${isNoMentions ? 8 : barWidth}%">
+                                    <div class="ods-chart-bar-text">${isNoMentions ? 'Sem menções' : ods.percentage + '%'}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ods-chart-values">
+                            <div class="ods-chart-count">${ods.studiesCount || 0}</div>
+                            <div class="ods-chart-percentage">${isNoMentions ? 'estudos' : (ods.studiesCount === 1 ? 'estudo' : 'estudos')}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function calculateDetailedTechStats() {
+            // Dados validados da planilha Excel - Coluna H "Tecnologias"
+            const validatedTechData = {
+                "Internet das Coisas (IoT)": { name: "Internet das Coisas (IoT)", studiesCount: 10, count: 10, percentage: 24.4 },
+                "Inteligência Artificial (I.A)": { name: "Inteligência Artificial (I.A)", studiesCount: 7, count: 7, percentage: 17.1 },
+                "Gêmeos Digitais": { name: "Gêmeos Digitais", studiesCount: 5, count: 5, percentage: 12.2 },
+                "Aprendizado de Máquina (ML)": { name: "Aprendizado de Máquina (ML)", studiesCount: 3, count: 3, percentage: 7.3 },
+                "Big Data": { name: "Big Data", studiesCount: 3, count: 3, percentage: 7.3 },
+                "TIC": { name: "TIC", studiesCount: 3, count: 3, percentage: 7.3 },
+                "Metaverso": { name: "Metaverso", studiesCount: 2, count: 2, percentage: 4.9 },
+                "SIG": { name: "SIG", studiesCount: 2, count: 2, percentage: 4.9 },
+                "Algoritmos de Classificação": { name: "Algoritmos de Classificação", studiesCount: 1, count: 1, percentage: 2.4 },
+                "Sistemas Adaptativos": { name: "Sistemas Adaptativos", studiesCount: 1, count: 1, percentage: 2.4 },
+                "Ambiente Construído": { name: "Ambiente Construído", studiesCount: 1, count: 1, percentage: 2.4 },
+                "Hidrogênio": { name: "Hidrogênio", studiesCount: 1, count: 1, percentage: 2.4 },
+                "Captura de Carbono": { name: "Captura de Carbono", studiesCount: 1, count: 1, percentage: 2.4 },
+                "Neurourbanismo": { name: "Neurourbanismo", studiesCount: 1, count: 1, percentage: 2.4 },
+                "Inteligência Híbrida": { name: "Inteligência Híbrida", studiesCount: 1, count: 1, percentage: 2.4 },
+                "Sensores": { name: "Sensores", studiesCount: 1, count: 1, percentage: 2.4 },
+                "Impressão 3D": { name: "Impressão 3D", studiesCount: 1, count: 1, percentage: 2.4 },
+                "Prototipagem": { name: "Prototipagem", studiesCount: 1, count: 1, percentage: 2.4 },
+                "OpenStreetMap": { name: "OpenStreetMap", studiesCount: 1, count: 1, percentage: 2.4 },
+                "Datasets": { name: "Datasets", studiesCount: 1, count: 1, percentage: 2.4 },
+                "Geoinformação": { name: "Geoinformação", studiesCount: 1, count: 1, percentage: 2.4 },
+                "Digitalização": { name: "Digitalização", studiesCount: 1, count: 1, percentage: 2.4 },
+                "Computação em Nuvem": { name: "Computação em Nuvem", studiesCount: 1, count: 1, percentage: 2.4 },
+                "Realidade Virtual": { name: "Realidade Virtual", studiesCount: 1, count: 1, percentage: 2.4 },
+                "Indústria 5.0": { name: "Indústria 5.0", studiesCount: 1, count: 1, percentage: 2.4 },
+                "Sociedade 5.0": { name: "Sociedade 5.0", studiesCount: 1, count: 1, percentage: 2.4 },
+                "GeoBIM": { name: "GeoBIM", studiesCount: 1, count: 1, percentage: 2.4 },
+                "Cibersegurança": { name: "Cibersegurança", studiesCount: 1, count: 1, percentage: 2.4 }
+            };
+
+            // Adicionar descrições genéricas para tecnologias
+            Object.values(validatedTechData).forEach(tech => {
+                tech.description = getTechDescription(tech.name);
+            });
+
+            const stats = {
+                totalStudies: 41,
+                totalMentions: 55,
+                uniqueTech: new Set(Object.keys(validatedTechData)),
+                techDistribution: validatedTechData
+            };
+
+            stats.averagePerStudy = (stats.totalMentions / stats.totalStudies).toFixed(1);
+            stats.uniqueTechCount = stats.uniqueTech.size;
+
+            appState.detailedTechStats = stats;
+        }
+
+        function getTechDescription(techKey) {
+            const descriptions = {
+                'Internet das Coisas (IoT)': 'Rede de dispositivos conectados coletando e compartilhando dados',
+                'Inteligência Artificial (I.A)': 'Sistemas computacionais que simulam inteligência humana',
+                'Gêmeos Digitais': 'Representações virtuais em tempo real de objetos físicos',
+                'Aprendizado de Máquina (ML)': 'Algoritmos que aprendem e melhoram automaticamente',
+                'Big Data': 'Processamento e análise de grandes volumes de dados',
+                'TIC': 'Tecnologias de Informação e Comunicação',
+                'Metaverso': 'Ambientes virtuais imersivos e interativos',
+                'SIG': 'Sistemas de Informação Geográfica',
+                'Algoritmos de Classificação': 'Métodos computacionais para categorização de dados',
+                'Sistemas Adaptativos': 'Sistemas que se ajustam automaticamente às condições',
+                'Ambiente Construído': 'Tecnologias para o ambiente urbano edificado',
+                'Hidrogênio': 'Tecnologia de energia limpa baseada em hidrogênio',
+                'Captura de Carbono': 'Tecnologias para captura e armazenamento de CO2',
+                'Neurourbanismo': 'Aplicação da neurociência no planejamento urbano',
+                'Inteligência Híbrida': 'Combinação de inteligência artificial e humana',
+                'Sensores': 'Dispositivos de detecção e monitoramento',
+                'Impressão 3D': 'Tecnologia de fabricação aditiva',
+                'Prototipagem': 'Desenvolvimento rápido de modelos e protótipos',
+                'OpenStreetMap': 'Plataforma colaborativa de mapeamento',
+                'Datasets': 'Conjuntos de dados estruturados',
+                'Geoinformação': 'Informações geográficas e espaciais',
+                'Digitalização': 'Transformação de processos para formato digital',
+                'Computação em Nuvem': 'Serviços computacionais via internet',
+                'Realidade Virtual': 'Ambientes simulados por computador',
+                'Indústria 5.0': 'Integração de humanos e máquinas na produção',
+                'Sociedade 5.0': 'Sociedade superinteligente centrada no ser humano',
+                'GeoBIM': 'Integração de dados geográficos e Building Information Modeling',
+                'Cibersegurança': 'Proteção de sistemas digitais contra ameaças'
+            };
+            return descriptions[techKey] || 'Tecnologia aplicada a cidades inteligentes';
+        }
+
+        function renderTechStatsPage() {
+            const stats = appState.detailedTechStats;
+            
+            // Atualiza cards de resumo
+            document.getElementById('totalStudiesTech').textContent = stats.totalStudies;
+            document.getElementById('uniqueTech').textContent = stats.uniqueTechCount;
+            document.getElementById('totalMentionsTech').textContent = stats.totalMentions;
+            document.getElementById('averagePerStudyTech').textContent = stats.averagePerStudy;
+            
+            // Renderiza o gráfico de barras horizontal
+            const sortedTech = Object.values(stats.techDistribution).sort((a, b) => b.count - a.count);
+            renderTechChart(sortedTech);
+        }
+        
+        function renderTechChart(sortedTech) {
+            const chartGrid = document.getElementById('techChartGrid');
+            
+            // Usa os dados validados da planilha Excel
+            const validatedData = appState.detailedTechStats.techDistribution;
+            
+            // Cria lista de todas as tecnologias usando dados validados
+            const allTech = Object.values(validatedData);
+            
+            // Ordena por quantidade de estudos (decrescente)
+            const sortedTechList = allTech.sort((a, b) => (b.studiesCount || 0) - (a.studiesCount || 0));
+            
+            const maxStudiesCount = Math.max(...allTech.map(tech => tech.studiesCount || 0));
+            
+            // Define as top 5 tecnologias mais mencionadas (baseado nos dados validados da planilha)
+            // 1. IoT (24.4%), 2. IA (17.1%), 3. Gêmeos Digitais (12.2%), 4. ML (7.3%), 5. Big Data (7.3%)
+            const topTechNames = ['Internet das Coisas (IoT)', 'Inteligência Artificial (I.A)', 'Gêmeos Digitais', 'Aprendizado de Máquina (ML)', 'Big Data'];
+            
+            chartGrid.innerHTML = sortedTechList.map(tech => {
+                const barWidth = maxStudiesCount > 0 ? ((tech.studiesCount || 0) / maxStudiesCount) * 100 : 0;
+                const isTopMention = topTechNames.includes(tech.name) && (tech.studiesCount || 0) > 0;
+                
+                let itemClass = 'ods-chart-item';
+                if (isTopMention) {
+                    itemClass += ' top-mentions';
+                }
+                
+                return `
+                    <div class="${itemClass}">
+                        <div class="ods-chart-icon" style="background: linear-gradient(135deg, #007bff, #0056b3); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 0.7rem; text-align: center; line-height: 1.1;">
+                            ${tech.name.substring(0, 3).toUpperCase()}
+                        </div>
+                        <div class="ods-chart-info">
+                            <div class="ods-chart-name">${tech.name}</div>
+                            <div class="ods-chart-description">${tech.description}</div>
+                        </div>
+                        <div class="ods-chart-bar-container">
+                            <div class="ods-chart-bar-bg">
+                                <div class="ods-chart-bar-fill" style="width: ${barWidth}%">
+                                    <div class="ods-chart-bar-text">${tech.percentage}%</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ods-chart-values">
+                            <div class="ods-chart-count">${tech.studiesCount || 0}</div>
+                            <div class="ods-chart-percentage">${tech.studiesCount === 1 ? 'estudo' : 'estudos'}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function calculateDetailedCSCStats() {
+            // Dados validados da planilha Excel - Coluna R "Pilar CSC"
+            const validatedCSCData = {
+                "MOB": { name: "MOB", fullName: "Mobilidade", studiesCount: 38, count: 38, percentage: 92.7 },
+                "TIC": { name: "TIC", fullName: "Tecnologia e Inovação", studiesCount: 38, count: 38, percentage: 92.7 },
+                "GOV": { name: "GOV", fullName: "Governança", studiesCount: 37, count: 37, percentage: 90.2 },
+                "SEG": { name: "SEG", fullName: "Segurança", studiesCount: 35, count: 35, percentage: 85.4 },
+                "ENE": { name: "ENE", fullName: "Energia", studiesCount: 34, count: 34, percentage: 82.9 },
+                "MAM": { name: "MAM", fullName: "Meio Ambiente", studiesCount: 33, count: 33, percentage: 80.5 },
+                "URB": { name: "URB", fullName: "Urbanismo", studiesCount: 23, count: 23, percentage: 56.1 },
+                "SAU": { name: "SAU", fullName: "Saúde", studiesCount: 14, count: 14, percentage: 34.1 },
+                "ECO": { name: "ECO", fullName: "Economia", studiesCount: 12, count: 12, percentage: 29.3 },
+                "EDU": { name: "EDU", fullName: "Educação", studiesCount: 5, count: 5, percentage: 12.2 },
+                "EMP": { name: "EMP", fullName: "Empreendedorismo", studiesCount: 4, count: 4, percentage: 9.8 }
+            };
+
+            // Adicionar descrições para os pilares CSC
+            Object.values(validatedCSCData).forEach(csc => {
+                csc.description = getCSCDescription(csc.fullName);
+            });
+
+            const stats = {
+                totalStudies: 41,
+                totalMentions: 274,
+                uniqueCSC: new Set(Object.keys(validatedCSCData)),
+                cscDistribution: validatedCSCData
+            };
+
+            stats.averagePerStudy = (stats.totalMentions / stats.totalStudies).toFixed(1);
+            stats.uniqueCSCCount = stats.uniqueCSC.size;
+
+            appState.detailedCSCStats = stats;
+        }
+
+        function getCSCDescription(cscKey) {
+            const descriptions = {
+                'Mobilidade': 'Sistemas de transporte inteligente e sustentável',
+                'Tecnologia e Inovação': 'Infraestrutura tecnológica e inovação digital',
+                'Governança': 'Gestão pública eficiente e participativa',
+                'Segurança': 'Segurança pública e proteção cidadã',
+                'Energia': 'Sistemas energéticos eficientes e sustentáveis',
+                'Meio Ambiente': 'Sustentabilidade ambiental e gestão de recursos',
+                'Urbanismo': 'Planejamento urbano e desenvolvimento territorial',
+                'Saúde': 'Sistemas de saúde inteligentes e acessíveis',
+                'Economia': 'Desenvolvimento econômico sustentável',
+                'Educação': 'Educação digital e sistemas de aprendizagem',
+                'Empreendedorismo': 'Ecossistema de inovação e empreendedorismo'
+            };
+            return descriptions[cscKey] || 'Pilar das Cidades e Comunidades Sustentáveis';
+        }
+
+        function renderCSCStatsPage() {
+            const stats = appState.detailedCSCStats;
+            
+            // Atualiza cards de resumo
+            document.getElementById('totalStudiesCSC').textContent = stats.totalStudies;
+            document.getElementById('uniqueCSC').textContent = stats.uniqueCSCCount;
+            document.getElementById('totalMentionsCSC').textContent = stats.totalMentions;
+            document.getElementById('averagePerStudyCSC').textContent = stats.averagePerStudy;
+            
+            // Renderiza o gráfico de barras horizontal
+            const sortedCSC = Object.values(stats.cscDistribution).sort((a, b) => b.count - a.count);
+            renderCSCChart(sortedCSC);
+        }
+        
+        function renderCSCChart(sortedCSC) {
+            const chartGrid = document.getElementById('cscChartGrid');
+            
+            // Usa os dados validados da planilha Excel
+            const validatedData = appState.detailedCSCStats.cscDistribution;
+            
+            // Cria lista de todos os pilares CSC usando dados validados
+            const allCSC = Object.values(validatedData);
+            
+            // Ordena por quantidade de estudos (decrescente)
+            const sortedCSCList = allCSC.sort((a, b) => (b.studiesCount || 0) - (a.studiesCount || 0));
+            
+            const maxStudiesCount = Math.max(...allCSC.map(csc => csc.studiesCount || 0));
+            
+            // Define os top 5 pilares CSC mais mencionados (baseado nos dados validados da planilha)
+            // 1. MOB (92.7%), 2. TIC (92.7%), 3. GOV (90.2%), 4. SEG (85.4%), 5. ENE (82.9%)
+            const topCSCNames = ['MOB', 'TIC', 'GOV', 'SEG', 'ENE'];
+            
+            chartGrid.innerHTML = sortedCSCList.map(csc => {
+                const iconPath = config.cscPillarIcons[csc.fullName];
+                const barWidth = maxStudiesCount > 0 ? ((csc.studiesCount || 0) / maxStudiesCount) * 100 : 0;
+                const isTopMention = topCSCNames.includes(csc.name) && (csc.studiesCount || 0) > 0;
+                
+                let itemClass = 'ods-chart-item';
+                if (isTopMention) {
+                    itemClass += ' top-mentions';
+                }
+                
+                return `
+                    <div class="${itemClass}">
+                        <img src="${iconPath}" alt="${csc.fullName}" class="ods-chart-icon">
+                        <div class="ods-chart-info">
+                            <div class="ods-chart-name">${csc.name} - ${csc.fullName}</div>
+                            <div class="ods-chart-description">${csc.description}</div>
+                        </div>
+                        <div class="ods-chart-bar-container">
+                            <div class="ods-chart-bar-bg">
+                                <div class="ods-chart-bar-fill" style="width: ${barWidth}%">
+                                    <div class="ods-chart-bar-text">${csc.percentage}%</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ods-chart-values">
+                            <div class="ods-chart-count">${csc.studiesCount || 0}</div>
+                            <div class="ods-chart-percentage">${csc.studiesCount === 1 ? 'estudo' : 'estudos'}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
         // Função para alternar entre texto truncado e completo
         function toggleTruncatedText(uniqueId) {
             const shortText = document.getElementById(`${uniqueId}_short`);

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Teste de Dados</title>
+</head>
+<body>
+    <h1>Teste de Carregamento de Dados</h1>
+    <div id="resultado"></div>
+    
+    <script src="dados_javascript.js"></script>
+    <script>
+        window.addEventListener('load', function() {
+            const resultado = document.getElementById('resultado');
+            
+            if (typeof data === 'undefined') {
+                resultado.innerHTML = '<p style="color: red;">❌ ERRO: Variável "data" não encontrada!</p>';
+                return;
+            }
+            
+            if (!data || !Array.isArray(data)) {
+                resultado.innerHTML = '<p style="color: red;">❌ ERRO: "data" não é um array válido!</p>';
+                return;
+            }
+            
+            resultado.innerHTML = `
+                <p style="color: green;">✅ Dados carregados com sucesso!</p>
+                <p><strong>Quantidade de estudos:</strong> ${data.length}</p>
+                <p><strong>Primeiro estudo:</strong> ${data[0] ? data[0].Título : 'N/A'}</p>
+                <p><strong>Campos do primeiro estudo:</strong></p>
+                <pre>${data[0] ? JSON.stringify(Object.keys(data[0]), null, 2) : 'N/A'}</pre>
+                <p><strong>ODS do primeiro estudo:</strong></p>
+                <ul>
+                    <li>ODS 1: ${data[0] ? data[0]['ODS 1'] : 'N/A'}</li>
+                    <li>ODS 11: ${data[0] ? data[0]['ODS 11'] : 'N/A'}</li>
+                    <li>Geral: ${data[0] ? data[0]['Geral'] : 'N/A'}</li>
+                </ul>
+            `;
+        });
+    </script>
+</body>
+</html>

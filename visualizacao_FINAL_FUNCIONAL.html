@@ -1,0 +1,3179 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cidades Inteligentes e ODS - RSL | Luciano Marinho Silveira</title>    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+        
+        /* Animações CSS */
+        @keyframes fadeInDown {
+            from { 
+                opacity: 0; 
+                transform: translateY(-50px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+        
+        @keyframes bounceIn {
+            0% { 
+                opacity: 0; 
+                transform: scale(0) rotate(0deg); 
+            }
+            50% { 
+                opacity: 1; 
+                transform: scale(1.1) rotate(22.5deg); 
+            }
+            100% { 
+                opacity: 1; 
+                transform: scale(1) rotate(45deg); 
+            }
+        }
+        
+        @keyframes continuousRotation {
+            from { 
+                transform: rotate(45deg); 
+            }
+            to { 
+                transform: rotate(405deg);
+            }
+        }
+        
+        @keyframes slowRotation {
+            from { 
+                transform: rotate(45deg); 
+            }
+            to { 
+                transform: rotate(225deg);
+            }
+        }
+        
+        .rotating-square {
+            animation: continuousRotation 4s linear infinite;
+        }
+        
+        .slow-rotating {
+            animation: slowRotation 6s ease-in-out infinite alternate;
+        }
+        
+        /* Classes de animação */
+        .hidden-initially {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .animated {
+            animation-fill-mode: both;
+        }
+        
+        .logo-hover:hover {
+            transform: scale(1.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .geometric-pattern div {
+            transition: all 0.3s ease;
+        }
+        
+        .geometric-pattern div:hover {
+            transform: rotate(90deg) scale(1.2) !important;
+        }
+        
+        .line-divider {
+            transform-origin: left center;
+        }
+        
+        /* Header e Footer da apresentação - ESTILO IDÊNTICO AO visualizacao_com_header_footer_animado.html */
+        .presentation-header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #059669 50%, #06b6d4 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 0;
+            margin-bottom: 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .presentation-footer {
+            background: linear-gradient(135deg, #1e3a8a 0%, #059669 50%, #06b6d4 100%);
+            color: white;
+            padding: 1rem;
+            margin-top: 0;
+            position: relative;
+            overflow: hidden;
+            height: clamp(80px, 12vh, 120px);
+        }
+        
+        .line-divider {
+            margin-top: clamp(0.5rem, 1vh, 1rem);
+            height: clamp(2px, 0.3vh, 4px);
+        }
+        
+        /* Layout principal */
+        .main-content-wrapper {
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            min-height: 100vh;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #007bff;
+        }
+        
+        .controls {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            border: 1px solid #dee2e6;
+            display: none !important; /* Ocultar seção de controles */
+        }
+        
+        .btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            margin: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        
+        .btn-danger {
+            background-color: #dc3545;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+        
+        .btn-success {
+            background-color: #28a745;
+        }
+        
+        .btn-success:hover {
+            background-color: #218838;
+        }          .column-selector {
+            background-color: #f8f9fa;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .column-selector-header {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #007bff;
+        }
+        
+        .column-selector-header h4 {
+            margin: 0;
+            color: #007bff;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+          .columns-grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 8px;
+            max-height: 160px;
+            overflow-y: auto;
+            padding: 5px;
+        }
+        
+        .column-checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 8px;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            font-size: 0.75em;
+            min-width: 0;
+        }
+        
+        .column-checkbox-item:hover {
+            background: #e3f2fd;
+            border-color: #007bff;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,123,255,0.2);
+        }
+        
+        .column-checkbox-item input[type="checkbox"] {
+            margin-right: 8px;
+            transform: scale(1.1);
+        }        .column-checkbox-item label {
+            margin: 0;
+            cursor: pointer;
+            flex: 1;
+            font-weight: 500;
+            color: #333;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-left: 4px;
+        }
+        
+        .column-checkbox-item input[type="checkbox"] {
+            margin-right: 0;
+            transform: scale(0.9);
+            flex-shrink: 0;
+        }        .quick-actions {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .quick-action-btn {
+            padding: 5px 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 18px;
+            font-size: 0.75em;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+        
+        .quick-action-btn:hover {
+            background: #0056b3;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .quick-action-btn.secondary {
+            background: #6c757d;
+        }
+        
+        .quick-action-btn.secondary:hover {
+            background: #545b62;
+        }
+        
+        /* Responsividade otimizada para apresentações */
+        @media (max-width: 1400px) {
+            .columns-grid {
+                grid-template-columns: repeat(8, 1fr);
+            }
+        }
+        
+        @media (max-width: 1200px) {
+            .columns-grid {
+                grid-template-columns: repeat(6, 1fr);
+            }
+        }
+        
+        @media (max-width: 900px) {
+            .columns-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            
+            .column-checkbox-item {
+                padding: 5px 6px;
+                font-size: 0.7em;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .columns-grid {
+                grid-template-columns: repeat(3, 1fr);
+                max-height: 140px;
+            }
+            
+            .column-checkbox-item {
+                padding: 4px 5px;
+                font-size: 0.65em;
+            }
+            
+            .quick-action-btn {
+                padding: 4px 8px;
+                font-size: 0.7em;
+            }        }
+        
+        .toggle-icon {
+            transition: transform 0.3s ease;
+            font-size: 1.2em;
+            color: #6c757d;
+        }
+        
+        .toggle-icon.expanded {
+            transform: rotate(180deg);
+        }
+        
+        .expand-hint {
+            font-size: 12px;
+            color: #6c757d;
+            font-weight: normal;
+        }
+        
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+            padding: 5px;
+            border-radius: 3px;
+        }
+        
+        .checkbox-container:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .checkbox-container input {
+            margin-right: 10px;
+        }
+        
+        .col-name {
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            position: relative;
+        }
+        
+        #mainTable {
+            width: 100%;
+            min-width: 1500px; /* Aumentando para garantir rolagem com todas as colunas */
+            border-collapse: collapse;
+            font-size: 12px;
+            table-layout: auto; /* Permite larguras dinâmicas das colunas */
+        }
+          #mainTable th {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 8px;
+            text-align: center;
+            font-weight: bold;
+            border: 1px solid #0056b3;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            white-space: nowrap; /* Evita quebra de linha nos cabeçalhos */
+            min-width: 100px; /* Largura mínima para cada cabeçalho */
+        }
+        
+        #mainTable td {
+            padding: 8px;
+            border: 1px solid #ddd;
+            background-color: white;
+            text-align: center;
+            vertical-align: middle;
+            white-space: nowrap; /* Evita quebra de linha nas células */
+            min-width: 100px; /* Largura mínima para cada célula */
+        }
+        
+        #mainTable tr:nth-child(even) td {
+            background-color: #f8f9fa;
+        }
+          .hidden-column {
+            display: none !important;
+        }
+        
+
+        
+        .table-transition-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, 
+                rgba(0, 123, 255, 0.1) 0%, 
+                rgba(255, 255, 255, 0.9) 50%, 
+                rgba(0, 123, 255, 0.1) 100%);
+            backdrop-filter: blur(2px);
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .table-transition-overlay.active {
+            opacity: 1;
+        }
+        
+        .table-transition-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            font-size: 16px;
+            font-weight: 600;
+            color: #007bff;
+            text-align: center;
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.8);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .table-transition-overlay.active .table-transition-message {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+        
+
+        
+        #mainTable.transitioning {
+            opacity: 0.3;
+            transform: scale(0.98);
+        }
+          .ods-icon {
+            width: 30px;
+            height: 30px;
+            margin: 2px;
+            border-radius: 3px;
+            display: inline-block;
+        }
+        
+        .csc-pillar-icon {
+            width: 30px;
+            height: 30px;
+            margin: 2px;
+            border-radius: 3px;
+            display: inline-block;
+            object-fit: contain;
+        }
+        
+        .ods-geral {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 2px;
+        }
+        
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+          .status-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .debug-info {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f1f3f4;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+            display: none !important;
+        }
+
+        /* ESTILOS DAS MÉTRICAS DOS ODS */
+        .metrics-section {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: white;
+            padding: 30px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .metric-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+
+        .metric-title {
+            font-size: 1rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }        .ods-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .ods-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: all 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
+            cursor: pointer;
+            border: 2px solid transparent;
+            position: relative;
+            transform-origin: center;
+        }
+
+        .ods-card.sorting {
+            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            z-index: 10;
+        }
+
+        .ods-card:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            border-color: #007bff;
+        }
+
+        .ods-card.sorting:hover {
+            transform: translateY(-3px) scale(1.02);
+        }
+
+        .ods-card .ods-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 6px;
+            object-fit: contain;
+            margin-bottom: 8px;
+        }
+
+        .ods-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+            font-size: 0.8rem;
+        }
+
+        .ods-count {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 3px;
+        }
+
+        .ods-percentage {
+            color: #666;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .details-panel {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100vh;
+            background: white;
+            box-shadow: -3px 0 10px rgba(0,0,0,0.2);
+            transition: right 0.3s ease;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .details-panel.active {
+            right: 0;
+        }
+
+        .details-header {
+            background: #007bff;
+            color: white;
+            padding: 20px;
+            position: sticky;
+            top: 0;
+        }
+
+        .details-content {
+            padding: 20px;
+        }
+
+        .study-card {
+            background: #f8f9fa;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 12px;
+            border-left: 3px solid #007bff;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .view-toggle {
+            margin-bottom: 20px;
+        }
+
+        .toggle-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .toggle-btn:hover {
+            background: #218838;
+        }
+
+        .toggle-btn.active {
+            background: #dc3545;
+        }        .hidden {
+            display: none !important;
+        }
+
+        /* ESTILOS PARA MELHORIAS DA SEÇÃO DE MÉTRICAS */
+        .enhanced-metrics {
+            margin: 20px 0;
+        }
+
+        .metrics-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab-btn:hover {
+            background: #f8f9fa;
+        }
+
+        .tab-btn.active {
+            background: #007bff;
+            color: white;
+            border-bottom-color: #007bff;
+        }
+
+        .chart-container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 400px;
+            margin: 20px 0;
+        }
+
+        .filters-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 1px solid #dee2e6;
+        }
+
+        .filter-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .filter-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .filter-item label {
+            font-weight: bold;
+            color: #495057;
+            font-size: 0.9rem;
+        }
+
+        .filter-item select, .filter-item input {
+            padding: 8px 12px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+
+        .advanced-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .temporal-analysis {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .trend-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .trend-up {
+            color: #28a745;
+        }
+
+        .trend-down {
+            color: #dc3545;
+        }
+
+        .trend-stable {
+            color: #ffc107;
+        }
+
+        .correlation-matrix {
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        .correlation-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+        }
+
+        .correlation-table th,
+        .correlation-table td {
+            padding: 8px;
+            text-align: center;
+            border: 1px solid #dee2e6;
+        }
+
+        .correlation-table th {
+            background: #007bff;
+            color: white;
+            font-weight: bold;
+        }
+
+        .correlation-high {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .correlation-medium {
+            background: #fff3cd;
+            color: #856404;
+        }        .correlation-low {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        /* BOTÃO DE CLASSIFICAÇÃO DISCRETO */
+        .sort-controls {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            z-index: 100;
+        }
+
+        .sort-btn {
+            background: rgba(0, 123, 255, 0.1);
+            border: 1px solid rgba(0, 123, 255, 0.3);
+            border-radius: 20px;
+            padding: 8px 15px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            color: #007bff;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .sort-btn:hover {
+            background: rgba(0, 123, 255, 0.2);
+            border-color: rgba(0, 123, 255, 0.5);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.15);
+        }
+
+        .sort-btn.active {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+
+        .sort-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .sort-btn.desc .sort-icon {
+            transform: rotate(180deg);
+        }        /* ANIMAÇÕES DE CLASSIFICAÇÃO APRIMORADAS */
+        @keyframes cardSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes cardPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .ods-card.moving {
+            z-index: 1000;
+            transition: none !important;
+            position: relative;
+        }
+
+        .ods-card.new-position {
+            animation: cardSlideIn 0.4s cubic-bezier(0.4, 0.0, 0.2, 1) 0.3s both;
+        }
+
+        .ods-card.highlight {
+            animation: cardPulse 0.4s ease-in-out;
+            border-color: #28a745;
+            box-shadow: 0 4px 20px rgba(40, 167, 69, 0.3);
+        }
+
+        /* OVERLAY DE REORGANIZAÇÃO */
+        .reorganizing-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(2px);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .reorganizing-overlay.active {
+            opacity: 1;
+        }
+
+        /* INDICADOR DE POSIÇÃO */
+        .position-indicator {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            background: #007bff;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .ods-card.show-position .position-indicator {
+            opacity: 1;
+        }
+
+        /* Estilos para texto truncado */
+        .truncated-text {
+            max-width: 250px;
+            line-height: 1.3;
+        }
+        
+        .ver-mais-btn {
+            font-size: 10px !important;
+            padding: 2px 6px !important;
+            margin-top: 3px !important;
+            background: #007bff !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 3px !important;
+            cursor: pointer !important;
+            transition: background-color 0.2s ease !important;
+        }
+        
+        .ver-mais-btn:hover {
+            background: #0056b3 !important;
+            transform: translateY(-1px);
+        }
+          .truncated-text span {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+        
+        /* Estilos para coluna Link */
+        .link-cell {
+            max-width: 150px;
+            width: 150px;
+        }
+        
+        .link-cell a {
+            color: #007bff;
+            text-decoration: none;
+            font-size: 12px;
+            display: block;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            padding: 2px 4px;
+            border-radius: 3px;
+            transition: all 0.2s ease;
+        }
+        
+        .link-cell a:hover {
+            text-decoration: underline;
+            background-color: #f8f9fa;
+            color: #0056b3;
+        }
+          .link-cell a::before {
+            content: "";
+            font-size: 10px;
+            opacity: 0.7;
+        }
+        
+        /* Estilos para colunas de palavras-chave */
+        .keywords-cell {
+            max-width: 200px;
+            width: 200px;
+            font-size: 11px;
+            line-height: 1.3;
+        }
+        
+        .keywords-cell .truncated-text {
+            text-align: left;
+            padding: 4px;
+        }
+          .keywords-cell .ver-mais-btn {
+            font-size: 9px !important;
+            padding: 1px 4px !important;
+            margin-top: 2px !important;
+        }
+        
+        /* Estilos para colunas de tecnologia */
+        .technology-cell {
+            max-width: 180px;
+            width: 180px;
+            font-size: 11px;
+            line-height: 1.3;
+        }
+        
+        .technology-cell .truncated-text {
+            text-align: left;
+            padding: 4px;
+        }
+        
+        .technology-cell .ver-mais-btn {
+            font-size: 9px !important;
+            padding: 1px 4px !important;
+            margin-top: 2px !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-content-wrapper">
+        <!-- Header com logo e slogan da apresentação -->
+        <div class="presentation-header">
+            <div class="flex justify-between items-center">
+                <!-- Logo Estácio Oficial -->
+                <div class="flex items-center">
+                    <div class="relative logo-hover">
+                        <img 
+                            src="./estacio-logo.png" 
+                            alt="Logo Estácio" 
+                            class="w-32 h-auto object-contain"
+                        />
+                    </div>
+                </div>
+                
+                <!-- Conteúdo Central -->
+                <div class="text-center flex-1 mx-8">
+                    <h1 class="text-2xl font-bold text-white mb-2">Cidades Inteligentes como Vetores para os ODS</h1>
+                    <p class="text-blue-100 text-sm">Análise de Conteúdo - Revisão Sistemática da Literatura</p>
+                </div>
+                
+                <!-- Slogan -->
+                <div class="text-right">
+                    <div class="font-bold text-xl">
+                        <span class="text-white">EDUCAR</span>
+                        <span class="text-cyan-300 ml-2">PARA</span>
+                    </div>
+                    <div class="font-bold text-xl">
+                        <span class="text-cyan-300">TRANS</span>
+                        <span class="text-white">FORMAR</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Informações da Universidade -->
+            <div class="text-center mt-4 text-blue-100 text-xs">
+                <div><strong>Universidade Estácio de Sá - UNESA</strong></div>
+                <div>Programa de Pós-Graduação em Administração e Desenvolvimento Empresarial • Mestrado em Administração e Desenvolvimento Empresarial</div>
+            </div>
+        </div>
+
+        <!-- Conteúdo principal da aplicação -->
+        <div class="flex-1">
+    <div class="container">
+        <div class="controls">
+            <h3>Controles de Visualização</h3>
+            <div class="view-toggle">                <button class="toggle-btn" id="tableViewBtn" onclick="showTableView()">Visualização Tabela</button>
+                <button class="toggle-btn" id="metricsViewBtn" onclick="showMetricsView()">Visualização Métricas ODS</button>
+            </div>
+            
+            <div class="status status-info" id="statusMessage">
+                Pronto para uso. Use os controles abaixo para gerenciar as colunas da tabela.
+            </div>
+        </div><div class="column-selector" id="columnSelector">
+            <div class="column-selector-header">
+                <h4>🔧 Seleção de Colunas da Tabela</h4>
+                <div class="text-muted" style="font-size: 0.85em; margin-top: 5px;">
+                    Marque/desmarque as colunas que deseja visualizar na tabela
+                </div>
+            </div>            <!-- Botões de ação rápida para apresentações -->
+            <div class="quick-actions">
+                <button class="quick-action-btn" onclick="selectAllColumns()">
+                    Todas as Colunas
+                </button>
+                <button class="quick-action-btn" onclick="selectMetadataColumns()">
+                    Metadados
+                </button>
+                <button class="quick-action-btn" onclick="selectTechnologyColumns()">
+                    Tecnologias - Cidades Inteligentes
+                </button>
+                <button class="quick-action-btn" onclick="selectODSColumns()">
+                    ODS
+                </button>
+                <button class="quick-action-btn" onclick="selectCSCColumns()">
+                    CSC
+                </button>
+                <button class="quick-action-btn secondary" onclick="clearAllColumns()">
+                    Limpar Tudo
+                </button>
+            </div>
+            
+            <div class="columns-grid" id="checkboxContainer">
+                <!-- Os checkboxes serão gerados dinamicamente aqui -->
+            </div>
+        </div><!-- SEÇÃO DE MÉTRICAS DOS ODS -->
+        <div id="metricsSection" class="hidden">
+            <!-- Filtros Interativos -->
+            <div class="filters-section">
+                <h3>Filtros Interativos</h3>
+                <div class="filter-group">
+                    <div class="filter-item">
+                        <label for="yearFilter">Ano de Publicação:</label>
+                        <select id="yearFilter" onchange="applyFilters()">
+                            <option value="">Todos os anos</option>
+                        </select>
+                    </div>
+                    <div class="filter-item">
+                        <label for="journalFilter">Periódico:</label>
+                        <select id="journalFilter" onchange="applyFilters()">
+                            <option value="">Todos os periódicos</option>
+                        </select>
+                    </div>
+                    <div class="filter-item">
+                        <label for="odsFilter">ODS Específico:</label>
+                        <select id="odsFilter" onchange="applyFilters()">
+                            <option value="">Todos os ODS</option>
+                        </select>
+                    </div>
+                    <div class="filter-item">
+                        <label>&nbsp;</label>
+                        <button class="btn" onclick="clearFilters()">Limpar Filtros</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Abas de Navegação -->
+            <div class="metrics-tabs">                <button class="tab-btn active" onclick="switchTab('overview')">Visão Geral</button>
+                <button class="tab-btn" onclick="switchTab('charts')">Gráficos</button>
+                <button class="tab-btn" onclick="switchTab('temporal')">Análise Temporal</button>
+                <button class="tab-btn" onclick="switchTab('advanced')">Métricas Avançadas</button>
+            </div>
+
+            <!-- Aba: Visão Geral -->
+            <div id="overviewTab" class="tab-content">
+                <div class="metrics-section">
+                    <h2 style="text-align: center; margin-bottom: 20px;">Métricas dos ODS</h2>
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-title">Total de Estudos</div>
+                            <div class="metric-value" id="totalStudies">41</div>
+                            <div>Corpus completo analisado</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-title">ODS mais Frequente</div>
+                            <div class="metric-value" id="mostFrequentODS">ODS 11</div>
+                            <div id="mostFrequentCount">Calculando...</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-title">Estudos "Geral"</div>
+                            <div class="metric-value" id="generalStudies">0</div>
+                            <div id="generalPercentage">Calculando...</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-title">ODS Identificados</div>
+                            <div class="metric-value" id="identifiedODS">0</div>
+                            <div>de 17 ODS</div>
+                        </div>
+                    </div>
+                </div>                <div style="text-align: center; margin: 20px 0;">                    <button class="btn" onclick="showAllStudies()">Ver Todos os Estudos</button>
+                    <button class="btn" onclick="showStatistics()">Estatísticas Detalhadas</button>
+                </div>                <div style="position: relative;">
+                    <div class="sort-controls">
+                        <button class="sort-btn" id="sortBtn" onclick="toggleOdsSort()">
+                            <span class="sort-icon">↕</span>
+                            <span id="sortText">Classificar por %</span>
+                        </button>
+                    </div>
+                    
+                    <div class="reorganizing-overlay" id="reorganizingOverlay"></div>
+                    
+                    <div class="ods-grid" id="odsGrid">
+                        <!-- Os cartões dos ODS serão inseridos aqui pelo JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Aba: Gráficos -->
+            <div id="chartsTab" class="tab-content hidden">
+                <div class="chart-container">
+                    <h3>Distribuição dos ODS</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="odsDistributionChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <h3>Ranking dos ODS</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="odsRankingChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Aba: Análise Temporal -->
+            <div id="temporalTab" class="tab-content hidden">
+                <div class="temporal-analysis">
+                    <h3>Evolução Temporal dos Estudos</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="temporalChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="advanced-stats" id="temporalStats">
+                    <!-- Estatísticas temporais serão inseridas aqui -->
+                </div>
+            </div>
+
+            <!-- Aba: Métricas Avançadas -->
+            <div id="advancedTab" class="tab-content hidden">
+                <div class="advanced-stats" id="advancedStats">
+                    <!-- Métricas avançadas serão inseridas aqui -->
+                </div>
+
+                <div class="chart-container">
+                    <h3>Correlação entre ODS</h3>
+                    <div class="correlation-matrix" id="correlationMatrix">
+                        <!-- Matriz de correlação será inserida aqui -->
+                    </div>
+                </div>
+            </div>
+        </div>        <div class="table-container" id="tableSection">
+            <!-- Overlay de transição -->
+            <div class="table-transition-overlay" id="transitionOverlay">
+                <div class="table-transition-message" id="transitionMessage">
+                    Aplicando nova visualização...
+                </div>
+            </div>
+            
+            <table id="mainTable">
+                <thead id="tableHeader"></thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+
+        <!-- Painel de detalhes -->
+        <div class="details-panel" id="detailsPanel">
+            <div class="details-header">
+                <button class="close-btn" onclick="closeDetails()">&times;</button>
+                <h3 id="detailsTitle">Detalhes</h3>
+                <p id="detailsSubtitle"></p>
+            </div>
+            <div class="details-content" id="detailsContent">
+                <!-- Conteúdo será inserido pelo JavaScript -->
+            </div>        </div>        <div id="debugInfo" class="debug-info">
+            <strong>Debug Info:</strong><br>
+            <div id="debugContent">Carregando...</div>
+        </div>
+    </div>
+
+    <script src="dados_javascript.js"></script>
+    <script>
+        // FUNÇÃO DE DEBUG VISUAL
+        function addDebugMessage(message) {
+            const debugContent = document.getElementById('debugContent');
+            if (debugContent) {
+                debugContent.innerHTML += message + '<br>';
+            }
+        }        // VARIÁVEIS GLOBAIS
+        let tableData = [];
+        let columnNames = [];        // Configuração inicial: mostrar todas as colunas por padrão
+        let defaultColumns = ["ID", "Título", "Autores", "Periódico", "DOI", "ISSN", "Ano de Publicação", "Idioma", "Palavras Chave", "Palavras chave normalizadas e Traduzidas", "Aspecto Principal - Estudo", "Categorias", "Link", "Status", "Trechos correlações", "ODS Mencionados pelos Autores", "Indicadores CSC", "Pilar CSC", "CORPUS - IRAMUTEQ"];
+        
+        // Variável para controlar o modo de visualização atual
+        let currentViewMode = 'all'; // 'all', 'metadata', 'technology'
+        
+        // DADOS DA TABELA
+        
+        const columns = ["ID", "Link", "Autores", "Título", "Ano de Publicação", "Periódico", "Idioma", "DOI", "ISSN", "Categorias", "Status", "Palavras Chave", "Palavras chave normalizadas e Traduzidas", "Trechos correlações", "ODS Mencionados pelos Autores", "Aspecto Principal - Estudo", "Indicadores CSC", "Pilar CSC", "CORPUS - IRAMUTEQ"];          // MAPEAMENTO DE ÍCONES ODS
+        const odsIcons = {
+            'ODS 1': 'Ícones oficiais - ODS/SDG-icon-PT--01-2-01.png',
+            'ODS 2': 'Ícones oficiais - ODS/SDG-icon-PT--02-2.png',
+            'ODS 3': 'Ícones oficiais - ODS/SDG-icon-PT--03-2.png',
+            'ODS 4': 'Ícones oficiais - ODS/SDG-icon-PT--04-2-01.png',
+            'ODS 5': 'Ícones oficiais - ODS/SDG-icon-PT--05-2.png',
+            'ODS 6': 'Ícones oficiais - ODS/SDG-icon-PT--06-2-01.png',
+            'ODS 7': 'Ícones oficiais - ODS/SDG-icon-PT--07-2-01.png',
+            'ODS 8': 'Ícones oficiais - ODS/SDG-icon-PT--08-2-01.png',
+            'ODS 9': 'Ícones oficiais - ODS/SDG-icon-PT--09-2.png',
+            'ODS 10': 'Ícones oficiais - ODS/SDG-icon-PT--10-2.png',
+            'ODS 11': 'Ícones oficiais - ODS/SDG-icon-PT--11-2.png',
+            'ODS 12': 'Ícones oficiais - ODS/SDG-icon-PT--12-2-01.png',
+            'ODS 13': 'Ícones oficiais - ODS/SDG-icon-PT--13-2.png',
+            'ODS 14': 'Ícones oficiais - ODS/SDG-icon-PT--14-2-01.png',
+            'ODS 15': 'Ícones oficiais - ODS/SDG-icon-PT--15-2-01.png',
+            'ODS 16': 'Ícones oficiais - ODS/SDG-icon-PT--16-2.png',
+            'ODS 17': 'Ícones oficiais - ODS/SDG-icon-PT--17-2.png',
+            'Geral': 'logo-sepado.png',
+            // Versão numérica para compatibilidade
+            "1": "Ícones oficiais - ODS/SDG-icon-PT--01-2-01.png", 
+            "2": "Ícones oficiais - ODS/SDG-icon-PT--02-2.png", 
+            "3": "Ícones oficiais - ODS/SDG-icon-PT--03-2.png", 
+            "4": "Ícones oficiais - ODS/SDG-icon-PT--04-2-01.png", 
+            "5": "Ícones oficiais - ODS/SDG-icon-PT--05-2.png", 
+            "6": "Ícones oficiais - ODS/SDG-icon-PT--06-2-01.png", 
+            "7": "Ícones oficiais - ODS/SDG-icon-PT--07-2-01.png", 
+            "8": "Ícones oficiais - ODS/SDG-icon-PT--08-2-01.png", 
+            "9": "Ícones oficiais - ODS/SDG-icon-PT--09-2.png", 
+            "10": "Ícones oficiais - ODS/SDG-icon-PT--10-2.png", 
+            "11": "Ícones oficiais - ODS/SDG-icon-PT--11-2.png", 
+            "12": "Ícones oficiais - ODS/SDG-icon-PT--12-2-01.png", 
+            "13": "Ícones oficiais - ODS/SDG-icon-PT--13-2.png", 
+            "14": "Ícones oficiais - ODS/SDG-icon-PT--14-2-01.png", 
+            "15": "Ícones oficiais - ODS/SDG-icon-PT--15-2-01.png", 
+            "16": "Ícones oficiais - ODS/SDG-icon-PT--16-2.png", 
+            "17": "Ícones oficiais - ODS/SDG-icon-PT--17-2.png"
+        };        // MAPEAMENTO DE ÍCONES DOS PILARES CSC
+        const cscPillarIcons = {
+            // Nomes completos
+            'Economia': 'ícones oficiais - CSC/Economia.png',
+            'Educação': 'ícones oficiais - CSC/Educação.png',
+            'Empreendedorismo': 'ícones oficiais - CSC/Empreendedorismo.png',
+            'Energia': 'ícones oficiais - CSC/Energia.png',
+            'Governança': 'ícones oficiais - CSC/Governança.png',
+            'Meio Ambiente': 'ícones oficiais - CSC/Meio Ambiente.png',
+            'Mobilidade': 'ícones oficiais - CSC/Mobilidade.png',
+            'Saúde': 'ícones oficiais - CSC/Saúde.png',
+            'Segurança': 'ícones oficiais - CSC/Segurança.png',
+            'Tecnologia e Inovação': 'ícones oficiais - CSC/Tecnologia e Inovação .png',
+            'Urbanismo': 'ícones oficiais - CSC/Urbanismo.png',
+            // Siglas (mapeamento para os dados do Excel)
+            'ECO': 'ícones oficiais - CSC/Economia.png',
+            'EDU': 'ícones oficiais - CSC/Educação.png',
+            'EMP': 'ícones oficiais - CSC/Empreendedorismo.png',
+            'ENE': 'ícones oficiais - CSC/Energia.png',
+            'GOV': 'ícones oficiais - CSC/Governança.png',
+            'MAM': 'ícones oficiais - CSC/Meio Ambiente.png',
+            'MOB': 'ícones oficiais - CSC/Mobilidade.png',
+            'SAU': 'ícones oficiais - CSC/Saúde.png',
+            'SEG': 'ícones oficiais - CSC/Segurança.png',
+            'TIC': 'ícones oficiais - CSC/Tecnologia e Inovação .png',
+            'URB': 'ícones oficiais - CSC/Urbanismo.png'
+        };
+        // STATUS MESSAGE
+        function updateStatus(message, type = 'info') {
+            const statusEl = document.getElementById('statusMessage');
+            if (statusEl) {
+                statusEl.textContent = message;
+                statusEl.className = `status status-${type}`;
+            }
+            console.log('STATUS:', message, type);
+        }        // INICIALIZAÇÃO
+        function initializeApp() {
+            addDebugMessage('Iniciando aplicação...');
+            
+            // Definir modo de visualização padrão
+            currentViewMode = 'all';
+            
+            // Verificar se os dados foram carregados
+            if (typeof data === 'undefined') {
+                console.error('Dados não carregados! Verifique se dados_javascript.js foi carregado corretamente.');
+                updateStatus('ERRO: Dados não encontrados. Verifique se dados_javascript.js existe.', 'error');
+                addDebugMessage('ERRO: Variável "data" não encontrada!');
+                return;
+            }
+            
+            addDebugMessage(`Dados carregados: ${data.length} estudos`);
+            console.log('Dados carregados:', data.length, 'estudos');
+            tableData = data;
+            columnNames = columns;
+            
+            createColumnCheckboxes();
+            renderTable();
+            
+            updateStatus(`Aplicação carregada: ${tableData.length} registros, todas as ${columnNames.length} colunas visíveis (modo: ${currentViewMode})`);
+            // addDebugMessage(`Tabela inicializada: ${tableData.length} registros, ${columnNames.length} colunas`);
+        }
+          // CRIAR CHECKBOXES DAS COLUNAS
+        function createColumnCheckboxes() {
+            
+            const container = document.getElementById('checkboxContainer');
+            if (!container) {
+                return;
+            }
+            
+            container.innerHTML = '';
+            
+            columnNames.forEach((columnName, index) => {
+                const isDefault = defaultColumns.includes(columnName);
+                
+                const checkboxDiv = document.createElement('div');
+                checkboxDiv.className = 'column-checkbox-item';
+                
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.id = `col_${index}`;
+                checkbox.value = index;
+                checkbox.checked = isDefault;
+                checkbox.onchange = function() { toggleColumn(index); };
+                  const label = document.createElement('label');
+                label.htmlFor = `col_${index}`;
+                label.textContent = columnName;
+                
+                checkboxDiv.appendChild(checkbox);
+                checkboxDiv.appendChild(label);
+                container.appendChild(checkboxDiv);
+            });
+            
+        }
+        
+        // TOGGLE COLUMN VISIBILITY
+        function toggleColumn(columnIndex) {
+            const checkbox = document.getElementById(`col_${columnIndex}`);
+            if (!checkbox) {
+                return;
+            }
+            
+            const isVisible = checkbox.checked;
+            const thElements = document.querySelectorAll(`#mainTable th:nth-child(${columnIndex + 1})`);
+            const tdElements = document.querySelectorAll(`#mainTable td:nth-child(${columnIndex + 1})`);
+            
+            // Aplicar/remover classe hidden
+            [...thElements, ...tdElements].forEach(element => {
+                if (isVisible) {
+                    element.classList.remove('hidden-column');
+                } else {
+                    element.classList.add('hidden-column');
+                }
+            });
+            
+        }
+        
+        // FUNÇÃO PRINCÍPAL: DESMARCAR TODAS AS COLUNAS
+        function deselectAllColumns() {
+            updateStatus('Desmarcando todas as colunas...', 'info');
+            
+            const checkboxes = document.querySelectorAll('#checkboxContainer input[type="checkbox"]');
+            
+            if (checkboxes.length === 0) {
+                updateStatus('ERRO: Nenhum checkbox encontrado!', 'error');
+                return;
+            }
+            
+            let processedCount = 0;
+            
+            // Processar cada checkbox
+            checkboxes.forEach((checkbox, index) => {
+                const columnIndex = parseInt(checkbox.value);
+                
+                // Desmarcar checkbox
+                checkbox.checked = false;
+                
+                // Ocultar coluna
+                const thElements = document.querySelectorAll(`#mainTable th:nth-child(${columnIndex + 1})`);
+                const tdElements = document.querySelectorAll(`#mainTable td:nth-child(${columnIndex + 1})`);
+                
+                [...thElements, ...tdElements].forEach(element => {
+                    element.classList.add('hidden-column');
+                });
+                
+                processedCount++;
+            });
+            
+            updateStatus(`SUCESSO: ${processedCount} colunas desmarcadas`, 'success');
+            
+            // Verificação final
+            setTimeout(() => {
+                const visibleColumns = document.querySelectorAll('#mainTable th:not(.hidden-column)').length;
+                const hiddenColumns = document.querySelectorAll('#mainTable th.hidden-column').length;
+                
+                if (hiddenColumns === columnNames.length) {
+                    updateStatus('PERFEITO: Todas as colunas foram desmarcadas!', 'success');
+                } else {
+                    updateStatus(`ATENÇÃO: ${visibleColumns} colunas ainda visíveis`, 'warning');
+                }
+            }, 100);
+        }
+        
+        // MARCAR TODAS AS COLUNAS
+        function selectAllColumns() {
+            updateStatus('Marcando todas as colunas...', 'info');
+            
+            const checkboxes = document.querySelectorAll('#checkboxContainer input[type="checkbox"]');
+            let processedCount = 0;
+            
+            checkboxes.forEach((checkbox, index) => {
+                const columnIndex = parseInt(checkbox.value);
+                checkbox.checked = true;
+                
+                const thElements = document.querySelectorAll(`#mainTable th:nth-child(${columnIndex + 1})`);
+                const tdElements = document.querySelectorAll(`#mainTable td:nth-child(${columnIndex + 1})`);
+                
+                [...thElements, ...tdElements].forEach(element => {
+                    element.classList.remove('hidden-column');
+                });
+                
+                processedCount++;
+            });
+            
+            updateStatus(`${processedCount} colunas selecionadas`, 'success');
+        }
+        
+        // RESETAR PARA PADRÃO
+        function resetToDefaultColumns() {
+            updateStatus('Resetando para configuração padrão...', 'info');
+            
+            const checkboxes = document.querySelectorAll('#checkboxContainer input[type="checkbox"]');
+            let selectedCount = 0;
+            
+            checkboxes.forEach((checkbox, index) => {
+                const columnIndex = parseInt(checkbox.value);
+                const columnName = columnNames[columnIndex];
+                const shouldBeVisible = defaultColumns.includes(columnName);
+                
+                checkbox.checked = shouldBeVisible;
+                
+                const thElements = document.querySelectorAll(`#mainTable th:nth-child(${columnIndex + 1})`);
+                const tdElements = document.querySelectorAll(`#mainTable td:nth-child(${columnIndex + 1})`);
+                
+                [...thElements, ...tdElements].forEach(element => {
+                    if (shouldBeVisible) {
+                        element.classList.remove('hidden-column');
+                        selectedCount++;
+                    } else {
+                        element.classList.add('hidden-column');
+                    }
+                });
+            });
+            
+            updateStatus(`Configuração padrão: ${selectedCount} colunas`, 'success');
+        }
+        
+        // MOSTRAR APENAS COLUNAS ODS
+        function showOnlyODSColumns() {
+            
+            const odsRelatedColumns = ['ID', 'Título', 'ODS Mencionados pelos Autores'];
+            const checkboxes = document.querySelectorAll('#checkboxContainer input[type="checkbox"]');
+            let selectedCount = 0;
+            
+            checkboxes.forEach((checkbox, index) => {
+                const columnIndex = parseInt(checkbox.value);
+                const columnName = columnNames[columnIndex];
+                const shouldBeVisible = odsRelatedColumns.some(odsCol => columnName.includes(odsCol));
+                
+                checkbox.checked = shouldBeVisible;
+                
+                const thElements = document.querySelectorAll(`#mainTable th:nth-child(${columnIndex + 1})`);
+                const tdElements = document.querySelectorAll(`#mainTable td:nth-child(${columnIndex + 1})`);
+                
+                [...thElements, ...tdElements].forEach(element => {
+                    if (shouldBeVisible) {
+                        element.classList.remove('hidden-column');
+                        selectedCount++;
+                    } else {
+                        element.classList.add('hidden-column');
+                    }
+                });
+            });
+            
+            updateStatus(`Modo ODS: ${selectedCount} colunas`, 'success');
+        }
+        
+        // MOSTRAR APENAS COLUNAS PILARES CSC
+        function showOnlyCSCColumns() {
+            const cscRelatedColumns = ['ID', 'Título', 'Pilar CSC', 'Indicadores CSC'];
+            const checkboxes = document.querySelectorAll('#checkboxContainer input[type="checkbox"]');
+            let selectedCount = 0;
+            
+            checkboxes.forEach((checkbox, index) => {
+                const columnIndex = parseInt(checkbox.value);
+                const columnName = columnNames[columnIndex];
+                const shouldBeVisible = cscRelatedColumns.some(cscCol => columnName.includes(cscCol));
+                
+                checkbox.checked = shouldBeVisible;
+                
+                const thElements = document.querySelectorAll(`#mainTable th:nth-child(${columnIndex + 1})`);
+                const tdElements = document.querySelectorAll(`#mainTable td:nth-child(${columnIndex + 1})`);
+                
+                [...thElements, ...tdElements].forEach(element => {
+                    if (shouldBeVisible) {
+                        element.classList.remove('hidden-column');
+                        selectedCount++;
+                    } else {
+                        element.classList.add('hidden-column');
+                    }
+                });
+            });
+            
+            updateStatus(`Modo Pilares CSC: ${selectedCount} colunas`, 'success');
+        }
+          // FUNÇÃO AUXILIAR PARA VERIFICAR SE COLUNA DEVE ESTAR VISÍVEL
+        function isColumnVisible(columnIndex) {
+            const checkbox = document.getElementById(`col_${columnIndex}`);
+            return checkbox ? checkbox.checked : defaultColumns.includes(columnNames[columnIndex]);
+        }
+        
+        // RENDERIZAR TABELA
+        function renderTable() {
+            console.log('Renderizando tabela...');
+            console.log('tableData:', tableData ? tableData.length : 'não definido');
+            console.log('columnNames:', columnNames ? columnNames.length : 'não definido');
+            
+            const headerContainer = document.getElementById('tableHeader');
+            const bodyContainer = document.getElementById('tableBody');
+            
+            if (!headerContainer || !bodyContainer) {
+                console.error('Containers da tabela não encontrados!');
+                return;
+            }
+            
+            if (!tableData || tableData.length === 0) {
+                console.error('Dados da tabela não disponíveis!');
+                bodyContainer.innerHTML = '<tr><td colspan="20" style="text-align: center; padding: 20px; color: red;">Nenhum dado encontrado</td></tr>';
+                return;
+            }
+              // Cabeçalho
+            const headerRow = document.createElement('tr');            columnNames.forEach((columnName, index) => {
+                const th = document.createElement('th');
+                th.textContent = columnName;
+                
+                // Estilo especial para coluna ID - largura mínima
+                if (columnName === 'ID') {
+                    th.style.width = '60px';
+                    th.style.maxWidth = '60px';
+                    th.style.minWidth = '60px';
+                    th.style.textAlign = 'center';
+                }
+                
+                // Estilo especial para coluna Link
+                if (columnName === 'Link') {
+                    th.classList.add('link-cell');
+                    th.style.width = '150px';
+                    th.style.maxWidth = '150px';
+                }
+                  // Estilo especial para colunas de palavras-chave - maior largura no modo technology
+                if (['Palavras Chave', 'Palavras chave normalizadas e Traduzidas'].includes(columnName)) {
+                    th.classList.add('keywords-cell');
+                    if (currentViewMode === 'technology') {
+                        th.style.width = '300px';
+                        th.style.maxWidth = '300px';
+                    } else {
+                        th.style.width = '200px';
+                        th.style.maxWidth = '200px';
+                    }
+                }
+                
+                // Estilo especial para colunas de tecnologia - maior largura no modo technology
+                if (['Aspecto Principal - Estudo', 'Categorias'].includes(columnName)) {
+                    th.classList.add('technology-cell');
+                    if (currentViewMode === 'technology') {
+                        th.style.width = '250px';
+                        th.style.maxWidth = '250px';
+                    } else {
+                        th.style.width = '180px';
+                        th.style.maxWidth = '180px';
+                    }
+                }
+                
+                if (!isColumnVisible(index)) {
+                    th.classList.add('hidden-column');
+                }
+                headerRow.appendChild(th);
+            });
+            headerContainer.innerHTML = '';
+            headerContainer.appendChild(headerRow);
+            
+            // Corpo da tabela
+            bodyContainer.innerHTML = '';
+            tableData.forEach((row, rowIndex) => {
+                const tr = document.createElement('tr');                columnNames.forEach((columnName, columnIndex) => {
+                    const td = document.createElement('td');
+                    let cellValue = row[columnName] || '';
+                    
+                    // Aplicar estilos específicos nas células da tabela
+                    if (columnName === 'ID') {
+                        td.style.width = '60px';
+                        td.style.maxWidth = '60px';
+                        td.style.minWidth = '60px';
+                        td.style.textAlign = 'center';
+                        td.style.fontWeight = 'bold';
+                    }
+                    
+                    if (['Palavras Chave', 'Palavras chave normalizadas e Traduzidas'].includes(columnName)) {
+                        td.classList.add('keywords-cell');
+                        if (currentViewMode === 'technology') {
+                            td.style.width = '300px';
+                            td.style.maxWidth = '300px';
+                        }
+                    }
+                    
+                    if (['Aspecto Principal - Estudo', 'Categorias'].includes(columnName)) {
+                        td.classList.add('technology-cell');
+                        if (currentViewMode === 'technology') {
+                            td.style.width = '250px';
+                            td.style.maxWidth = '250px';
+                        }
+                    }
+                    
+                    // Processamento especial para coluna ID (criar hiperlink)
+                    if (columnName === 'ID' && cellValue && row['Link']) {
+                        const link = document.createElement('a');
+                        link.href = row['Link'];
+                        link.target = '_blank';
+                        link.textContent = cellValue;
+                        link.style.color = '#007bff';
+                        link.style.textDecoration = 'none';
+                        link.style.fontWeight = 'bold';
+                        link.addEventListener('mouseenter', function() {
+                            this.style.textDecoration = 'underline';
+                        });
+                        link.addEventListener('mouseleave', function() {
+                            this.style.textDecoration = 'none';
+                        });
+                        td.appendChild(link);
+                    }                    // Processamento especial para colunas com muito texto (truncar) - EXCETO no modo Tecnologias e Indicadores CSC no modo CSC
+                    else if (['Trechos correlações', 'Indicadores CSC', 'CORPUS - IRAMUTEQ'].includes(columnName) && cellValue && currentViewMode !== 'technology' && !(columnName === 'Indicadores CSC' && currentViewMode === 'csc')) {
+                        const textStr = String(cellValue).trim();
+                        if (textStr.length > 20) {
+                            const truncatedText = textStr.substring(0, 20);
+                            const uniqueId = `text_${rowIndex}_${columnIndex}`;
+                            
+                            td.innerHTML = `
+                                <div class="truncated-text">
+                                    <span id="${uniqueId}_short">${truncatedText}...</span>
+                                    <span id="${uniqueId}_full" style="display: none;">${textStr}</span>
+                                    <br>
+                                    <button 
+                                        id="${uniqueId}_btn" 
+                                        class="ver-mais-btn" 
+                                        onclick="toggleText('${uniqueId}')"
+                                        style="font-size: 10px; padding: 2px 6px; margin-top: 3px; background: #007bff; color: white; border: none; border-radius: 3px; cursor: pointer;">
+                                        Ver mais
+                                    </button>
+                                </div>
+                            `;
+                        } else {
+                            td.textContent = textStr;
+                        }
+                    }                    // Processamento especial para colunas de palavras-chave (truncar com [...]) - EXCETO no modo Tecnologias
+                    else if (['Palavras Chave', 'Palavras chave normalizadas e Traduzidas'].includes(columnName) && cellValue && currentViewMode !== 'technology') {
+                        td.classList.add('keywords-cell');
+                        const textStr = String(cellValue).trim();
+                        if (textStr.length > 40) {
+                            const truncatedText = textStr.substring(0, 40);
+                            const uniqueId = `keywords_${rowIndex}_${columnIndex}`;
+                            
+                            td.innerHTML = `
+                                <div class="truncated-text">
+                                    <span id="${uniqueId}_short">${truncatedText}[...]</span>
+                                    <span id="${uniqueId}_full" style="display: none;">${textStr}</span>
+                                    <br>
+                                    <button 
+                                        id="${uniqueId}_btn" 
+                                        class="ver-mais-btn" 
+                                        onclick="toggleText('${uniqueId}')"
+                                        style="font-size: 10px; padding: 2px 6px; margin-top: 3px; background: #007bff; color: white; border: none; border-radius: 3px; cursor: pointer;">
+                                        Ver mais
+                                    </button>
+                                </div>
+                            `;
+                        } else {
+                            td.textContent = textStr;
+                        }}                    // Processamento especial para colunas de tecnologia (Aspecto Principal e Categorias) - EXCETO no modo Tecnologias
+                    else if (['Aspecto Principal - Estudo', 'Categorias'].includes(columnName) && cellValue && currentViewMode !== 'technology') {
+                        td.classList.add('technology-cell');
+                        const textStr = String(cellValue).trim();
+                        if (textStr.length > 35) {
+                            const truncatedText = textStr.substring(0, 35);
+                            const uniqueId = `tech_${rowIndex}_${columnIndex}`;
+                            
+                            td.innerHTML = `
+                                <div class="truncated-text">
+                                    <span id="${uniqueId}_short">${truncatedText}[...]</span>
+                                    <span id="${uniqueId}_full" style="display: none;">${textStr}</span>
+                                    <br>
+                                    <button 
+                                        id="${uniqueId}_btn" 
+                                        class="ver-mais-btn" 
+                                        onclick="toggleText('${uniqueId}')"
+                                        style="font-size: 10px; padding: 2px 6px; margin-top: 3px; background: #007bff; color: white; border: none; border-radius: 3px; cursor: pointer;">
+                                        Ver mais
+                                    </button>
+                                </div>
+                            `;
+                        } else {
+                            td.textContent = textStr;
+                        }                    }
+                    // Processamento especial para colunas do modo Tecnologia (exibir texto completo SEM truncamento)
+                    else if (currentViewMode === 'technology' && ['Palavras Chave', 'Palavras chave normalizadas e Traduzidas', 'Aspecto Principal - Estudo', 'Categorias'].includes(columnName) && cellValue) {
+                        // Adicionar classes específicas para styling
+                        if (['Palavras Chave', 'Palavras chave normalizadas e Traduzidas'].includes(columnName)) {
+                            td.classList.add('keywords-cell');
+                        } else if (['Aspecto Principal - Estudo', 'Categorias'].includes(columnName)) {
+                            td.classList.add('technology-cell');
+                        }                        // Exibir texto completo sem truncamento
+                        td.textContent = String(cellValue).trim();
+                    }
+                    // Processamento especial para colunas do modo CSC (exibir Indicadores CSC completos SEM truncamento)
+                    else if (currentViewMode === 'csc' && columnName === 'Indicadores CSC' && cellValue) {
+                        // Exibir texto completo dos Indicadores CSC sem truncamento no modo CSC
+                        td.textContent = String(cellValue).trim();
+                    }
+                    // Processamento especial para coluna ODS
+                    else if (columnName === 'ODS Mencionados pelos Autores' && cellValue) {
+                        td.innerHTML = formatODSCell(cellValue);
+                    } 
+                    // Processamento especial para coluna Pilar CSC
+                    else if (columnName === 'Pilar CSC' && cellValue) {
+                        td.innerHTML = formatCSCPillarCell(cellValue);
+                    }                    // Processamento especial para coluna Link (truncar e criar link clicável)
+                    else if (columnName === 'Link' && cellValue) {
+                        td.classList.add('link-cell');
+                        const linkStr = String(cellValue).trim();
+                        
+                        if (linkStr.length > 30) {
+                            // Extrair domínio do link para exibição mais útil
+                            let displayText = linkStr;
+                            try {
+                                const url = new URL(linkStr);
+                                const domain = url.hostname.replace('www.', '');
+                                displayText = `${domain}...`;
+                            } catch (e) {
+                                // Se não for URL válida, truncar normalmente
+                                displayText = linkStr.substring(0, 25) + '...';
+                            }
+                            
+                            const link = document.createElement('a');
+                            link.href = linkStr;
+                            link.target = '_blank';
+                            link.textContent = displayText;
+                            link.title = linkStr; // Tooltip com link completo
+                            
+                            td.appendChild(link);
+                        } else {
+                            // Link curto - mostrar completo
+                            const link = document.createElement('a');
+                            link.href = linkStr;
+                            link.target = '_blank';
+                            link.textContent = linkStr;
+                            
+                            td.appendChild(link);
+                        }
+                    }                    else {
+                        td.textContent = cellValue;
+                    }
+                    
+                    if (!isColumnVisible(columnIndex)) {
+                        td.classList.add('hidden-column');
+                    }
+                    
+                    tr.appendChild(td);
+                });
+                  bodyContainer.appendChild(tr);
+            });
+            
+            console.log('Tabela renderizada com sucesso!', tableData.length, 'linhas');
+        }        // FORMATAR CÉLULA ODS COM ÍCONES
+        function formatODSCell(value) {
+            if (!value) return '';
+            
+            const valueStr = String(value).trim();
+            
+            // Caso especial para "Geral" - usar logo circular dos ODS
+            if (valueStr.toLowerCase().includes('geral')) {
+                return `<div style="display: flex; flex-direction: column; align-items: center; gap: 5px;">
+                    <img src="logo-sepado.png" alt="ODS Geral" class="ods-icon" title="Objetivos de Desenvolvimento Sustentável" style="width: 40px; height: 40px; border-radius: 50%;">
+                    <span style="font-size: 10px; text-align: center;">Geral</span>
+                </div>`;
+            }
+            
+            // Buscar padrões "ODS X" no texto (onde X é o número)
+            const odsMatches = valueStr.match(/ODS\s+(\d{1,2})/g) || [];
+            
+            if (odsMatches.length > 0) {
+                const icons = odsMatches.map(match => {
+                    const odsKey = match.replace(/\s+/g, ' '); // Normalizar espaços
+                    const iconPath = odsIcons[odsKey];
+                    if (iconPath) {
+                        return `<img src="${iconPath}" alt="${odsKey}" class="ods-icon" title="${odsKey}">`;
+                    }
+                    return '';
+                }).filter(icon => icon !== '').join('');
+                
+                if (icons) {
+                    return `<div style="display: flex; flex-direction: column; align-items: center; gap: 5px;">
+                        <div style="display: flex; justify-content: center; gap: 3px; flex-wrap: wrap;">${icons}</div>
+                        <span style="font-size: 11px; text-align: center; line-height: 1.2;">${valueStr}</span>
+                    </div>`;
+                }
+            }
+            
+            return valueStr;
+        }        // FORMATAR CÉLULA PILAR CSC COM ÍCONES
+        function formatCSCPillarCell(value) {
+            if (!value) return '';
+            
+            const valueStr = String(value).trim();
+            
+            // Dividir os pilares por vírgula e limpar espaços
+            const pillars = valueStr.split(',').map(pillar => pillar.trim()).filter(pillar => pillar);
+            
+            if (pillars.length === 0) return valueStr;
+            
+            // Gerar ícones para cada pilar encontrado
+            const icons = pillars.map(pillar => {
+                const iconPath = cscPillarIcons[pillar];
+                if (iconPath) {
+                    return `<img src="${iconPath}" alt="${pillar}" class="csc-pillar-icon" title="${pillar}">`;
+                }
+                return '';
+            }).filter(icon => icon !== '').join(' ');
+            
+            if (icons) {
+                return `<div style="display: flex; flex-direction: column; align-items: center; gap: 5px;">
+                    <div style="display: flex; justify-content: center; gap: 3px; flex-wrap: wrap;">${icons}</div>
+                    <span style="font-size: 11px; text-align: center; line-height: 1.2;">${valueStr}</span>
+                </div>`;
+            }
+            
+            return valueStr;
+        }
+          // FUNÇÃO PARA COLAPSAR/EXPANDIR SELETOR DE COLUNAS
+        // REMOVIDA: Agora os controles estão sempre visíveis em layout horizontal
+        /*
+        function toggleColumnSelector() {
+            const content = document.getElementById('columnSelectorContent');
+            const icon = document.getElementById('toggleIcon');
+            
+            if (content.classList.contains('show')) {
+                content.classList.remove('show');
+                icon.classList.remove('expanded');
+                icon.textContent = '▼';
+            } else {
+                content.classList.add('show');
+                icon.classList.add('expanded');
+                icon.textContent = '▲';
+            }
+        }
+        */// FUNÇÕES DAS MÉTRICAS DOS ODS
+        let odsMetrics = {};
+        let filteredData = [];
+        let charts = {};
+        let sortState = { active: false, descending: true }; // Estado da classificação
+        const odsKeys = ['ODS 1', 'ODS 2', 'ODS 3', 'ODS 4', 'ODS 5', 'ODS 6', 'ODS 7', 'ODS 8', 'ODS 9', 'ODS 10', 'ODS 11', 'ODS 12', 'ODS 13', 'ODS 14', 'ODS 15', 'ODS 16', 'ODS 17', 'Geral'];function calculateOdsMetrics() {
+            addDebugMessage('🔄 Calculando métricas dos ODS...');
+            
+            // Verificar se os dados estão disponíveis
+            if (typeof data === 'undefined' || !data || data.length === 0) {
+                console.error('Dados não disponíveis para calcular métricas');
+                addDebugMessage('❌ ERRO: Dados não disponíveis para métricas');
+                return;
+            }
+            
+            addDebugMessage(`✅ Iniciando cálculo para ${data.length} estudos`);
+            console.log('Calculando métricas para', data.length, 'estudos');
+            
+            odsKeys.forEach(ods => {
+                const count = data.filter(item => item[ods] === 'x').length;
+                const percentage = data.length > 0 ? (count / data.length * 100).toFixed(1) : 0;
+                odsMetrics[ods] = { count, percentage };
+                console.log(`${ods}: ${count} estudos (${percentage}%)`);
+            });
+
+            addDebugMessage(`📊 Métricas calculadas com sucesso`);
+              // Atualizar métricas na interface
+            const totalStudiesEl = document.getElementById('totalStudies');
+            if (totalStudiesEl) {
+                totalStudiesEl.textContent = data.length;
+                addDebugMessage(`✅ Total de estudos atualizado: ${data.length}`);
+            } else {
+                addDebugMessage('❌ ERRO: Elemento totalStudies não encontrado');
+            }
+            
+            // Encontrar ODS mais frequente
+            const sortedOds = odsKeys.slice(0, 17).sort((a, b) => odsMetrics[b].count - odsMetrics[a].count);
+            const mostFrequent = sortedOds[0];
+            
+            const mostFrequentODSEl = document.getElementById('mostFrequentODS');
+            const mostFrequentCountEl = document.getElementById('mostFrequentCount');
+            
+            if (mostFrequentODSEl && mostFrequentCountEl) {
+                mostFrequentODSEl.textContent = mostFrequent;
+                mostFrequentCountEl.textContent = `${odsMetrics[mostFrequent].count} estudos (${odsMetrics[mostFrequent].percentage}%)`;
+                addDebugMessage(`✅ ODS mais frequente: ${mostFrequent} (${odsMetrics[mostFrequent].count} estudos)`);
+            } else {
+                addDebugMessage('❌ ERRO: Elementos do ODS mais frequente não encontrados');
+            }
+            
+            // Estudos gerais
+            const generalStudiesEl = document.getElementById('generalStudies');
+            const generalPercentageEl = document.getElementById('generalPercentage');
+            
+            if (generalStudiesEl && generalPercentageEl) {
+                generalStudiesEl.textContent = odsMetrics['Geral'].count;
+                generalPercentageEl.textContent = `${odsMetrics['Geral'].percentage}% do total`;
+                addDebugMessage(`✅ Estudos gerais: ${odsMetrics['Geral'].count} (${odsMetrics['Geral'].percentage}%)`);
+            } else {
+                addDebugMessage('❌ ERRO: Elementos de estudos gerais não encontrados');
+            }
+            
+            // ODS identificados
+            const identifiedCount = odsKeys.slice(0, 17).filter(ods => odsMetrics[ods].count > 0).length;
+            document.getElementById('identifiedODS').textContent = identifiedCount;        }        function generateOdsCards(animated = false) {
+            addDebugMessage('🎨 Gerando cards dos ODS...');
+            
+            const grid = document.getElementById('odsGrid');
+            if (!grid) {
+                addDebugMessage('❌ ERRO: Elemento odsGrid não encontrado');
+                               return;
+            }
+              // Preparar dados dos ODS
+            let odsData = odsKeys.map(ods => ({
+                key: ods,
+                metrics: odsMetrics[ods] || { count: 0, percentage: 0 },
+                iconPath: odsIcons[ods]
+            }));
+            
+            // Verificar se as métricas estão disponíveis
+            if (!odsMetrics || Object.keys(odsMetrics).length === 0) {
+                addDebugMessage('❌ ERRO: Métricas dos ODS não estão disponíveis');
+                calculateOdsMetrics(); // Tentar calcular novamente
+                return;
+            }
+            
+            addDebugMessage(`📊 Dados preparados: ${odsData.length} ODS`);
+            console.log('Dados ODS antes da ordenação:', odsData.slice(0, 5).map(d => ({ key: d.key, count: d.metrics.count, percentage: d.metrics.percentage })));              // Aplicar classificação se ativa
+            if (sortState.active) {
+                odsData = odsData.sort((a, b) => {
+                    if (sortState.descending) {
+                        return b.metrics.percentage - a.metrics.percentage;
+                    } else {
+                        return a.metrics.percentage - b.metrics.percentage;
+                    }
+                });
+                
+                addDebugMessage(`🔢 Ordenação aplicada: ${sortState.descending ? 'Maior → Menor' : 'Menor → Maior'} (por percentual)`);
+                console.log('Dados ODS após ordenação:', odsData.slice(0, 5).map(d => ({ key: d.key, count: d.metrics.count, percentage: d.metrics.percentage })));
+            }
+            
+            if (animated) {
+                // Animação suave de reorganização
+                animateCardReorganization(odsData, grid);
+            } else {
+                // Geração normal sem animação
+                renderOdsCards(odsData, grid);
+            }
+            
+            addDebugMessage(`✅ ${odsKeys.length} cards gerados com sucesso`);
+        }
+
+        function renderOdsCards(odsData, grid) {
+            grid.innerHTML = '';
+            
+            odsData.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'ods-card';
+                card.onclick = () => showOdsDetails(item.key);
+                card.setAttribute('data-ods', item.key);
+                
+                // Adicionar indicador de posição se classificação estiver ativa
+                const positionIndicator = sortState.active ? 
+                    `<div class="position-indicator">${index + 1}</div>` : '';
+                
+                card.innerHTML = `
+                    ${positionIndicator}
+                    <img src="${item.iconPath}" alt="${item.key}" class="ods-icon" onerror="this.style.display='none'">
+                    <div class="ods-title">${item.key}</div>
+                    <div class="ods-count">${item.metrics.count}</div>
+                    <div class="ods-percentage">${item.metrics.percentage}%</div>
+                `;
+                
+                // Adicionar classe para mostrar posição se classificação ativa
+                if (sortState.active) {
+                    card.classList.add('show-position');
+                }
+                
+                grid.appendChild(card);
+            });
+        }        function animateCardReorganization(odsData, grid) {
+            addDebugMessage('🎭 Iniciando animação FLIP de reorganização...');
+            
+            // FASE 1: FIRST - Capturar posições originais
+            const originalCards = Array.from(grid.querySelectorAll('.ods-card'));
+            const originalPositions = new Map();
+            const originalOrder = new Map();
+            
+            originalCards.forEach((card, index) => {
+                const ods = card.getAttribute('data-ods');
+                const rect = card.getBoundingClientRect();
+                const gridRect = grid.getBoundingClientRect();
+                
+                originalPositions.set(ods, {
+                    x: rect.left - gridRect.left,
+                    y: rect.top - gridRect.top,
+                    width: rect.width,
+                    height: rect.height
+                });
+                originalOrder.set(ods, index);
+            });
+            
+            // FASE 2: LAST - Criar nova estrutura invisível
+            const tempContainer = document.createElement('div');
+            tempContainer.style.position = 'absolute';
+            tempContainer.style.top = '0';
+            tempContainer.style.left = '0';
+            tempContainer.style.width = '100%';
+            tempContainer.style.visibility = 'hidden';
+            tempContainer.className = grid.className;
+            grid.parentNode.appendChild(tempContainer);
+            
+            renderOdsCards(odsData, tempContainer);
+            
+            // Capturar novas posições
+            const newCards = Array.from(tempContainer.querySelectorAll('.ods-card'));
+            const newPositions = new Map();
+            
+            newCards.forEach((card, index) => {
+                const ods = card.getAttribute('data-ods');
+                const rect = card.getBoundingClientRect();
+                const gridRect = tempContainer.getBoundingClientRect();
+                
+                newPositions.set(ods, {
+                    x: rect.left - gridRect.left,
+                    y: rect.top - gridRect.top,
+                    index: index
+                });
+            });
+            
+            // Remover container temporário
+            tempContainer.remove();
+            
+            // FASE 3: INVERT - Calcular diferenças e aplicar transformações
+            const movePromises = originalCards.map(card => {
+                return new Promise(resolve => {
+                    const ods = card.getAttribute('data-ods');
+                    const originalPos = originalPositions.get(ods);
+                    const newPos = newPositions.get(ods);
+                    
+                    if (!newPos) {
+                        resolve();
+                        return;
+                    }
+                    
+                    // Calcular diferença
+                    const deltaX = newPos.x - originalPos.x;
+                    const deltaY = newPos.y - originalPos.y;
+                    
+                    // Aplicar transformação inicial (posição invertida)
+                    card.classList.add('moving');
+                    card.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+                    card.style.zIndex = 1000 + Math.abs(deltaX) + Math.abs(deltaY);
+                    
+                    // Adicionar efeito de elevação durante movimento
+                    if (deltaX !== 0 || deltaY !== 0) {
+                        card.style.boxShadow = '0 20px 40px rgba(0,0,0,0.3)';
+                        card.style.borderColor = '#007bff';
+                    }
+                    
+                    // FASE 4: PLAY - Animar para posição final
+                    requestAnimationFrame(() => {
+                        card.style.transition = `transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+                                                box-shadow 0.8s ease, 
+                                                border-color 0.8s ease`;
+                        card.style.transform = 'translate(0, 0)';
+                        
+                        // Restaurar estilos após animação
+                        setTimeout(() => {
+                            card.style.boxShadow = '';
+                            card.style.borderColor = '';
+                            card.style.zIndex = '';
+                            card.classList.remove('moving');
+                            card.style.transition = '';
+                            card.style.transform = '';
+                            resolve();
+                        }, 800);
+                    });
+                });
+            });
+            
+            // Aguardar todas as animações terminarem e então atualizar o DOM
+            Promise.all(movePromises).then(() => {
+                // Regenerar a estrutura final com indicadores de posição
+                renderOdsCards(odsData, grid);
+                
+                // Aplicar efeitos finais
+                const finalCards = Array.from(grid.querySelectorAll('.ods-card'));
+                finalCards.forEach((card, index) => {
+                    const ods = card.getAttribute('data-ods');
+                    
+                    // Destacar os top 3 com animação escalonada
+                    if (sortState.active && index < 3 && odsData[index].metrics.count > 0) {
+                        setTimeout(() => {
+                            card.classList.add('highlight');
+                            setTimeout(() => card.classList.remove('highlight'), 600);
+                        }, index * 150);
+                    }
+                    
+                    // Animação de "chegada" para cards que mudaram muito de posição
+                    const originalIndex = originalOrder.get(ods);
+                    if (Math.abs(originalIndex - index) > 3) {
+                        card.style.opacity = '0';
+                        setTimeout(() => {
+                            card.style.transition = 'opacity 0.4s ease';
+                            card.style.opacity = '1';
+                            setTimeout(() => {
+                                card.style.transition = '';
+                            }, 400);
+                        }, 200);
+                    }
+                });
+                
+                addDebugMessage('✨ Animação FLIP concluída com sucesso!');
+            });
+        }        // FUNÇÃO PARA ALTERNAR CLASSIFICAÇÃO
+        function toggleOdsSort() {
+            const sortBtn = document.getElementById('sortBtn');
+            const sortText = document.getElementById('sortText');
+            const sortIcon = sortBtn.querySelector('.sort-icon');
+            const overlay = document.getElementById('reorganizingOverlay');
+            
+            addDebugMessage(`🔄 toggleOdsSort chamado. Estado atual: active=${sortState.active}, descending=${sortState.descending}`);
+            
+            // Desabilitar botão durante animação
+            sortBtn.disabled = true;
+            sortBtn.style.opacity = '0.6';
+            
+            // Mostrar overlay
+            overlay.classList.add('active');
+            
+            if (!sortState.active) {
+                // Ativar classificação (maior para menor)
+                sortState.active = true;
+                sortState.descending = true;                sortBtn.classList.add('active', 'desc');
+                sortText.textContent = 'Maior → Menor';
+                sortIcon.textContent = '↓';
+                
+                addDebugMessage('Classificação ativada: Maior → Menor (por percentual)');
+            } else if (sortState.descending) {
+                // Inverter para menor para maior
+                sortState.descending = false;
+                sortBtn.classList.remove('desc');
+                sortText.textContent = 'Menor → Maior';
+                sortIcon.textContent = '↑';
+                
+                addDebugMessage('Classificação invertida: Menor → Maior (por percentual)');
+            } else {
+                // Desativar classificação (ordem original)
+                sortState.active = false;
+                sortBtn.classList.remove('active', 'desc');
+                sortText.textContent = 'Classificar por %';
+                sortIcon.textContent = '↕';
+                
+                addDebugMessage('Classificação desativada: Ordem original');
+            }
+            
+            // Debug do estado das métricas antes de gerar cards
+            addDebugMessage(`📊 Estado das métricas: ${Object.keys(odsMetrics).length} ODS calculados`);
+            console.log('Estado atual das métricas:', odsMetrics);
+            console.log('Estado da classificação:', sortState);
+            
+            // Regenerar cards com animação FLIP
+            generateOdsCards(true);
+            
+            // Reabilitar botão após animação
+            setTimeout(() => {
+                overlay.classList.remove('active');
+                sortBtn.disabled = false;
+                sortBtn.style.opacity = '1';
+                addDebugMessage('✅ Botão de classificação reabilitado');
+            }, 1200);
+        }
+
+        // NOVAS FUNÇÕES PARA MELHORIAS
+
+        // 1. SISTEMA DE ABAS
+        function switchTab(tabName) {
+            // Remover classe active de todas as abas
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
+            
+            // Ativar aba selecionada
+            event.target.classList.add('active');
+            document.getElementById(tabName + 'Tab').classList.remove('hidden');
+            
+            // Inicializar conteúdo específico da aba
+            switch(tabName) {
+                case 'charts':
+                    generateCharts();
+                    break;
+                case 'temporal':
+                    generateTemporalAnalysis();
+                    break;
+                case 'advanced':
+                    generateAdvancedMetrics();
+                    break;
+            }
+        }
+
+        // 2. INICIALIZAR FILTROS
+        function initializeFilters() {
+            // Filtro de anos
+            const years = [...new Set(data.map(item => item.Ano).filter(year => year))].sort();
+            const yearSelect = document.getElementById('yearFilter');
+            years.forEach(year => {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                yearSelect.appendChild(option);
+            });
+
+            // Filtro de periódicos
+            const journals = [...new Set(data.map(item => item.Periódico).filter(journal => journal))].sort();
+            const journalSelect = document.getElementById('journalFilter');
+            journals.forEach(journal => {
+                const option = document.createElement('option');
+                option.value = journal;
+                option.textContent = journal;
+                journalSelect.appendChild(option);
+            });
+
+            // Filtro de ODS
+            const odsSelect = document.getElementById('odsFilter');
+            odsKeys.forEach(ods => {
+                const option = document.createElement('option');
+                option.value = ods;
+                option.textContent = ods;
+                odsSelect.appendChild(option);
+            });
+
+            // Inicializar dados filtrados
+            filteredData = [...data];
+        }
+
+        // 3. APLICAR FILTROS
+        function applyFilters() {
+            const yearFilter = document.getElementById('yearFilter').value;
+            const journalFilter = document.getElementById('journalFilter').value;
+            const odsFilter = document.getElementById('odsFilter').value;
+                case 'charts':
+                    generateCharts();
+                    break;
+                case 'temporal':
+                    generateTemporalAnalysis();
+                    break;
+                case 'advanced':
+                    generateAdvancedMetrics();
+                    break;
+            }
+        }
+
+        // 2. INICIALIZAR FILTROS
+        function initializeFilters() {
+            // Filtro de anos
+            const years = [...new Set(data.map(item => item.Ano).filter(year => year))].sort();
+            const yearSelect = document.getElementById('yearFilter');
+            years.forEach(year => {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                yearSelect.appendChild(option);
+            });
+
+            // Filtro de periódicos
+            const journals = [...new Set(data.map(item => item.Periódico).filter(journal => journal))].sort();
+            const journalSelect = document.getElementById('journalFilter');
+            journals.forEach(journal => {
+                const option = document.createElement('option');
+                option.value = journal;
+                option.textContent = journal;
+                journalSelect.appendChild(option);
+            });
+
+            // Filtro de ODS
+            const odsSelect = document.getElementById('odsFilter');
+            odsKeys.forEach(ods => {
+                const option = document.createElement('option');
+                option.value = ods;
+                option.textContent = ods;
+                odsSelect.appendChild(option);
+            });
+
+            // Inicializar dados filtrados
+            filteredData = [...data];
+        }
+
+        // 3. APLICAR FILTROS
+        function applyFilters() {
+            const yearFilter = document.getElementById('yearFilter').value;
+            const journalFilter = document.getElementById('journalFilter').value;
+            const odsFilter = document.getElementById('odsFilter').value;
+
+            filteredData = data.filter(item => {
+                if (yearFilter && item.Ano !== yearFilter) return false;
+                if (journalFilter && item.Periódico !== journalFilter) return false;
+                if (odsFilter && item[odsFilter] !== 'x') return false;
+                return true;
+            });
+
+            // Recalcular métricas com dados filtrados
+            calculateFilteredMetrics();
+            updateVisualizationsWithFilters();
+            
+            addDebugMessage(`🔍 Filtros aplicados: ${filteredData.length} estudos selecionados`);
+        }
+
+        // 4. LIMPAR FILTROS
+        function clearFilters() {
+            document.getElementById('yearFilter').value = '';
+            document.getElementById('journalFilter').value = '';
+            document.getElementById('odsFilter').value = '';
+            filteredData = [...data];
+            
+            calculateFilteredMetrics();
+            updateVisualizationsWithFilters();
+            
+            addDebugMessage('🔄 Filtros limpos - mostrando todos os estudos');
+        }
+
+        // 5. CALCULAR MÉTRICAS COM FILTROS
+        function calculateFilteredMetrics() {
+            const currentData = filteredData;
+            
+            odsKeys.forEach(ods => {
+                const count = currentData.filter(item => item[ods] === 'x').length;
+                const percentage = currentData.length > 0 ? (count / currentData.length * 100).toFixed(1) : 0;
+                odsMetrics[ods] = { count, percentage };
+            });
+
+            // Atualizar interface
+            document.getElementById('totalStudies').textContent = currentData.length;
+            
+            const sortedOds = odsKeys.slice(0, 17).sort((a, b) => odsMetrics[b].count - odsMetrics[a].count);
+            const mostFrequent = sortedOds[0];
+            
+            if (odsMetrics[mostFrequent].count > 0) {
+                document.getElementById('mostFrequentODS').textContent = mostFrequent;
+                document.getElementById('mostFrequentCount').textContent = `${odsMetrics[mostFrequent].count} estudos (${odsMetrics[mostFrequent].percentage}%)`;
+            }
+            
+            document.getElementById('generalStudies').textContent = odsMetrics['Geral'].count;
+            document.getElementById('generalPercentage').textContent = `${odsMetrics['Geral'].percentage}% do total`;
+            
+            const identifiedCount = odsKeys.slice(0, 17).filter(ods => odsMetrics[ods].count > 0).length;
+            document.getElementById('identifiedODS').textContent = identifiedCount;
+        }
+
+        // 6. GERAR GRÁFICOS
+        function generateCharts() {
+            // Gráfico de Distribuição (Pizza)
+            generateOdsDistributionChart();
+            
+            // Gráfico de Ranking (Barras)
+            generateOdsRankingChart();
+        }
+
+        function generateOdsDistributionChart() {
+            const ctx = document.getElementById('odsDistributionChart').getContext('2d');
+            
+            // Destruir gráfico existente se houver
+            if (charts.distribution) {
+                charts.distribution.destroy();
+            }
+            
+            const odsData = odsKeys.slice(0, 17).filter(ods => odsMetrics[ods].count > 0);
+            const counts = odsData.map(ods => odsMetrics[ods].count);
+            const colors = [
+                '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF',
+                '#FF9F40', '#FF6384', '#C9CBCF', '#4BC0C0', '#FF6384',
+                '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40',
+                '#FF6384', '#C9CBCF'
+            ];
+            
+            charts.distribution = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: odsData,
+                    datasets: [{
+                        data: counts,
+                        backgroundColor: colors.slice(0, odsData.length),
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right'
+                        },
+                        title: {
+                            display: true,
+                            text: 'Distribuição dos Estudos por ODS'
+                        }
+                    }
+                }
+            });
+        }
+
+        function generateOdsRankingChart() {
+            const ctx = document.getElementById('odsRankingChart').getContext('2d');
+            
+            if (charts.ranking) {
+                charts.ranking.destroy();
+            }
+            
+            const sortedOds = odsKeys.slice(0, 17)
+                .map(ods => ({ ods, count: odsMetrics[ods].count }))
+                .filter(item => item.count > 0)
+                .sort((a, b) => b.count - a.count);
+            
+            charts.ranking = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: sortedOds.map(item => item.ods),
+                    datasets: [{
+                        label: 'Número de Estudos',
+                        data: sortedOds.map(item => item.count),
+                        backgroundColor: '#007bff',
+                        borderColor: '#0056b3',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Ranking dos ODS por Número de Estudos'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                },
+            });
+        }
+
+        // 7. ANÁLISE TEMPORAL
+        function generateTemporalAnalysis() {
+            generateTemporalChart();
+            generateTemporalStats();
+        }
+
+        function generateTemporalChart() {
+            const ctx = document.getElementById('temporalChart').getContext('2d');
+            
+            if (charts.temporal) {
+                charts.temporal.destroy();
+            }
+            
+            // Agrupar por ano
+            const yearData = {};
+            filteredData.forEach(item => {
+                const year = item.Ano;
+                if (year) {
+                    yearData[year] = (yearData[year] || 0) + 1;
+                }
+            });
+            
+            const years = Object.keys(yearData).sort();
+            const counts = years.map(year => yearData[year]);
+            
+            charts.temporal = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: years,
+                    datasets: [{
+                        label: 'Estudos Publicados',
+                        data: counts,
+                        borderColor: '#007bff',
+                        backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Evolução Temporal das Publicações'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                },
+            });
+        }
+
+        function generateTemporalStats() {
+            const container = document.getElementById('temporalStats');
+            
+            // Calcular estatísticas temporais
+            const years = [...new Set(filteredData.map(item => item.Ano).filter(year => year))].sort();
+            const totalYears = years.length;
+            const avgPerYear = filteredData.length / totalYears;
+            
+            // Tendência
+            let trend = 'stable';
+            if (years.length >= 3) {
+                const recent = years.slice(-3);
+                const recentCounts = recent.map(year => 
+                    filteredData.filter(item => item.Ano === year).length
+                );
+                const firstHalf = recentCounts.slice(0, Math.ceil(recentCounts.length / 2));
+                const secondHalf = recentCounts.slice(Math.floor(recentCounts.length / 2));
+                const avgFirst = firstHalf.reduce((a, b) => a + b, 0) / firstHalf.length;
+                const avgSecond = secondHalf.reduce((a, b) => a + b, 0) / secondHalf.length;
+                
+                if (avgSecond > avgFirst * 1.2) trend = 'up';
+                else if (avgSecond < avgFirst * 0.8) trend = 'down';
+            }
+            
+            container.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-label">Período de Análise</div>
+                    <div class="stat-value">${years[0]} - ${years[years.length - 1]}</div>
+                    <div class="stat-label">${totalYears} anos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Média por Ano</div>
+                    <div class="stat-value">${avgPerYear.toFixed(1)}</div>
+                    <div class="stat-label">estudos/ano</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Tendência Recente</div>
+                    <div class="stat-value">
+                        <span class="trend-indicator trend-${trend}">
+                            ${trend === 'up' ? '📈' : trend === 'down' ? '📉' : '📊'}
+                            ${trend === 'up' ? 'Crescimento' : trend === 'down' ? 'Declínio' : 'Estável'}
+                        </span>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 8. MÉTRICAS AVANÇADAS
+        function generateAdvancedMetrics() {
+            generateAdvancedStats();
+            generateCorrelationMatrix();
+        }
+
+        function generateAdvancedStats() {
+            const container = document.getElementById('advancedStats');
+            
+            // Calcular estatísticas avançadas
+                });
+                html += '</tr>';
+            });
+            
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+
+        // 9. ATUALIZAR VISUALIZAÇÕES COM FILTROS
+        function updateVisualizationsWithFilters() {
+            generateOdsCards();
+            
+            // Atualizar gráficos se estiverem visíveis
+            if (!document.getElementById('chartsTab').classList.contains('hidden')) {
+                generateCharts();
+            }
+            if (!document.getElementById('temporalTab').classList.contains('hidden')) {
+                generateTemporalAnalysis();
+            }
+            if (!document.getElementById('advancedTab').classList.contains('hidden')) {
+                generateAdvancedMetrics();
+            }
+        }
+
+        function showOdsDetails(ods) {
+            const relatedStudies = data.filter(item => item[ods] === 'x');
+            const metrics = odsMetrics[ods];
+            
+            document.getElementById('detailsTitle').textContent = ods;
+            document.getElementById('detailsSubtitle').textContent = 
+                `${metrics.count} estudos (${metrics.percentage}% do total)`;
+            
+            const content = document.getElementById('detailsContent');
+            
+            if (relatedStudies.length === 0) {
+                content.innerHTML = '<p style="text-align: center; color: #666; padding: 30px;">Nenhum estudo encontrado para este ODS.</p>';
+            } else {
+                content.innerHTML = relatedStudies.map(study => `
+                    <div class="study-card">
+                        <h4 style="color: #333; margin-bottom: 8px; font-size: 0.9rem;">
+                            ${study.Autores} (${study.Ano})
+                        </h4>
+                        <p style="font-weight: 600; margin-bottom: 6px; font-size: 0.85rem;">
+                            ${study.Título}
+                        </p>
+                        <p style="color: #666; font-size: 0.8rem; margin-bottom: 6px;">
+                            ${study.Periódico} • ${study.Categorias}
+                        </p>
+                        <p style="font-size: 0.75rem; color: #888;">
+                            <strong>Aspecto:</strong> ${study['Aspecto Principal - Estudo']}
+                        </p>
+                    </div>
+                `).join('');
+            }
+            
+            document.getElementById('detailsPanel').classList.add('active');
+        }
+
+        function closeDetails() {
+            document.getElementById('detailsPanel').classList.remove('active');
+        }
+
+        function showAllStudies() {
+            document.getElementById('detailsTitle').textContent = 'Todos os Estudos';
+            document.getElementById('detailsSubtitle').textContent = `${data.length} estudos no total`;
+            
+            const content = document.getElementById('detailsContent');
+            content.innerHTML = data.map(study => `
+                <div class="study-card">
+                    <h4 style="color: #333; margin-bottom: 8px; font-size: 0.9rem;">
+                        [${study.ID}] ${study.Autores} (${study.Ano})
+                    </h4>
+                    <p style="font-weight: 600; margin-bottom: 6px; font-size: 0.85rem;">
+                        ${study.Título}
+                    </p>
+                    <p style="color: #666; font-size: 0.8rem; margin-bottom: 6px;">
+                        ${study.Periódico} • ${study.Categorias}
+                    </p>
+                    <p style="font-size: 0.75rem; color: #888;">
+                        <strong>ODS:</strong> ${study['ODS (Geral / Específico)']}
+                    </p>
+                </div>
+            `).join('');
+            
+            document.getElementById('detailsPanel').classList.add('active');
+        }
+
+        function showStatistics() {
+            const totalWithOds = odsKeys.slice(0, 17).reduce((sum, ods) => sum + odsMetrics[ods].count, 0);
+            const avgPerOds = (totalWithOds / 17).toFixed(1);
+            
+            const sortedOds = odsKeys.slice(0, 17).sort((a, b) => odsMetrics[b].count - odsMetrics[a].count);
+            
+            document.getElementById('detailsTitle').textContent = 'Estatísticas Detalhadas';
+            document.getElementById('detailsSubtitle').textContent = 'Análise completa dos dados';
+            
+            const content = document.getElementById('detailsContent');
+            content.innerHTML = `
+                <div style="margin-bottom: 20px;">
+                    <h4 style="color: #333; margin-bottom: 10px; font-size: 1rem;">Resumo Estatístico</h4>
+                    <div style="background: #f8f9fa; padding: 12px; border-radius: 6px; font-size: 0.9rem;">
+                        <p><strong>Total de estudos:</strong> ${data.length}</p>
+                        <p><strong>Estudos com ODS específicos:</strong> ${totalWithOds}</p>
+                        <p><strong>Estudos gerais:</strong> ${odsMetrics['Geral'].count}</p>
+                        <p><strong>Média por ODS:</strong> ${avgPerOds} estudos</p>
+                        <p><strong>ODS mais abordados:</strong> ${sortedOds.slice(0, 3).map(ods => `${ods} (${odsMetrics[ods].count})`).join(', ')}</p>
+                    </div>
+                </div>
+                
+                <h4 style="color: #333; margin-bottom: 10px; font-size: 1rem;">Ranking dos ODS</h4>
+                ${sortedOds.map((ods, index) => `
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px; margin-bottom: 6px; background: ${index < 3 ? '#e8f5e8' : '#f8f9fa'}; border-radius: 4px; font-size: 0.85rem;">
+                        <span><strong>${index + 1}º</strong> ${ods}</span>
+                        <span><strong>${odsMetrics[ods].count}</strong> (${odsMetrics[ods].percentage}%)</span>
+                    </div>
+                `).join('')}
+            `;
+            
+            document.getElementById('detailsPanel').classList.add('active');
+        }
+
+        function showTableView() {
+            document.getElementById('tableSection').classList.remove('hidden');
+            document.getElementById('metricsSection').classList.add('hidden');
+            document.getElementById('tableControls').style.display = 'block';
+            
+            document.getElementById('tableViewBtn').classList.add('active');
+            document.getElementById('metricsViewBtn').classList.remove('active');
+        }        function showMetricsView() {
+            addDebugMessage('🔄 Ativando visualização de métricas...');
+            
+            document.getElementById('tableSection').classList.add('hidden');
+            document.getElementById('metricsSection').classList.remove('hidden');
+            document.getElementById('tableControls').style.display = 'none';
+            
+            document.getElementById('metricsViewBtn').classList.add('active');
+            document.getElementById('tableViewBtn').classList.remove('active');
+            
+            // Inicializar filtros se ainda não foram inicializados
+            if (document.getElementById('yearFilter').children.length === 1) {
+                addDebugMessage('🔧 Inicializando filtros...');
+                initializeFilters();
+            }
+            
+            // Garantir que os dados estejam disponíveis
+            if (typeof data === 'undefined' || !data || data.length === 0) {
+                addDebugMessage('❌ ERRO: Dados não disponíveis na visualização de métricas');
+                return;
+            }
+            
+            // Calcular e gerar métricas
+            addDebugMessage('Calculando métricas dos ODS...');
+            calculateOdsMetrics();
+            
+            // Resetar estado da classificação ao entrar na visualização
+            sortState.active = false;
+            const sortBtn = document.getElementById('sortBtn');
+            const sortText = document.getElementById('sortText');
+            const sortIcon = sortBtn.querySelector('.sort-icon');            if (sortBtn && sortText && sortIcon) {
+                sortBtn.classList.remove('active', 'desc');
+                sortText.textContent = 'Classificar por %';
+                sortIcon.textContent = '↕';
+            }
+            
+            generateOdsCards();
+            
+            addDebugMessage('Visualização de métricas ativada com melhorias');
+        }
+
+        // Fechar painel ao clicar fora
+        document.addEventListener('click', function(e) {
+            const panel = document.getElementById('detailsPanel');
+            if (panel.classList.contains('active') && !panel.contains(e.target) && !e.target.closest('.ods-card') && !e.target.closest('.btn')) {
+                closeDetails();
+            }
+        });
+          // INICIALIZAR QUANDO A PÁGINA CARREGAR
+        document.addEventListener('DOMContentLoaded', function() {
+            // Aguardar um pouco para garantir que o script externo seja carregado
+            setTimeout(function() {
+                initializeApp();
+                // Inicializar com visualização de tabela
+                showTableView();
+            }, 100);
+        });
+        
+        // LOG DE FUNÇÕES DISPONÍVEIS
+        window.addEventListener('load', function() {
+            console.log('Página totalmente carregada');
+            console.log('Tipo de data:', typeof data);
+            console.log('Dados disponíveis:', data ? data.length : 0);        });          // FUNÇÕES DE AÇÃO RÁPIDA PARA APRESENTAÇÕES
+          
+          // FUNÇÃO PARA TRANSIÇÕES SUAVES ENTRE MODOS
+          function applyViewModeTransition(newMode, modeDescription, callback) {
+            const overlay = document.getElementById('transitionOverlay');
+            const message = document.getElementById('transitionMessage');
+            const table = document.getElementById('mainTable');
+            
+            // Atualizar mensagem baseada no modo
+            const modeMessages = {
+                'all': '✅ Carregando todas as colunas...',
+                'metadata': '📋 Aplicando modo metadados...',
+                'technology': '🔬 Configurando modo tecnologias...',
+                'ods': '🎯 Ativando modo ODS...',
+                'csc': '🏛️ Configurando modo CSC...',
+                'custom': '🚫 Limpando visualização...'
+            };
+            
+            message.textContent = modeMessages[newMode] || '🔄 Aplicando nova visualização...';
+            
+            // Fase 1: Mostrar overlay e adicionar efeito de transição na tabela
+            overlay.classList.add('active');
+            table.classList.add('transitioning');
+            
+            // Fase 2: Aplicar mudanças após fade out
+            setTimeout(() => {
+                callback(); // Executar a lógica de mudança de modo
+                
+                // Fase 3: Fade in após aplicar mudanças
+                setTimeout(() => {
+                    overlay.classList.remove('active');
+                    table.classList.remove('transitioning');
+                }, 200);
+            }, 300);
+          }
+          
+          function selectAllColumns() {
+            applyViewModeTransition('all', 'Todas as Colunas', () => {
+                currentViewMode = 'all';
+                const checkboxes = document.querySelectorAll('#checkboxContainer input[type="checkbox"]');
+                
+                checkboxes.forEach((checkbox, index) => {
+                    checkbox.checked = true;
+                });
+                
+                // Re-renderizar a tabela para aplicar as novas regras de truncamento
+                renderTable();
+                
+                updateStatus(`Todas as colunas selecionadas: ${columnNames.length} colunas visíveis (modo: ${currentViewMode})`);
+                addDebugMessage(`✅ Todas as colunas habilitadas: ${columnNames.length} colunas, modo: ${currentViewMode}`);
+            });
+        }          function selectMetadataColumns() {
+            applyViewModeTransition('metadata', 'Metadados', () => {
+                currentViewMode = 'metadata';
+                // Colunas de metadados: ID até Link (inclusive)
+                const metadataColumns = ['ID', 'Título', 'Autores', 'Periódico', 'DOI', 'ISSN', 'Ano de Publicação', 'Idioma', 'Palavras Chave', 'Palavras chave normalizadas e Traduzidas', 'Aspecto Principal - Estudo', 'Categorias', 'Link'];
+                const checkboxes = document.querySelectorAll('#checkboxContainer input[type="checkbox"]');
+                let selectedCount = 0;
+                  checkboxes.forEach((checkbox, index) => {
+                    const columnIndex = parseInt(checkbox.value);
+                    const columnName = columnNames[columnIndex];
+                    const isMetadata = metadataColumns.includes(columnName);
+                    
+                    checkbox.checked = isMetadata;
+                    
+                    if (isMetadata) {
+                        selectedCount++;
+                    }
+                });
+                
+                // Re-renderizar a tabela para aplicar as novas regras de truncamento
+                renderTable();
+                  updateStatus(`Colunas de metadados selecionadas: ${selectedCount} colunas visíveis (modo: ${currentViewMode})`);
+                addDebugMessage(`📋 Aplicado perfil metadados: ${selectedCount} colunas, modo: ${currentViewMode}`);
+            });
+        }
+          function selectODSColumns() {
+            applyViewModeTransition('ods', 'ODS', () => {
+                currentViewMode = 'ods'; // Define o modo de visualização
+                // Colunas ODS: ID, Autores, Título, Ano, Trechos Correlações (truncados), ODS Mencionados
+                const odsColumns = ['ID', 'Autores', 'Título', 'Ano de Publicação', 'Trechos correlações', 'ODS Mencionados pelos Autores'];
+                const checkboxes = document.querySelectorAll('#checkboxContainer input[type="checkbox"]');
+                let selectedCount = 0;
+                
+                checkboxes.forEach((checkbox, index) => {
+                    const columnIndex = parseInt(checkbox.value);
+                    const columnName = columnNames[columnIndex];
+                    const isODS = odsColumns.includes(columnName);
+                    
+                    checkbox.checked = isODS;
+                    
+                    if (isODS) {
+                        selectedCount++;
+                    }
+                });
+                
+                // Re-renderizar a tabela para aplicar as novas regras de truncamento
+                renderTable();
+                
+                updateStatus(`Colunas ODS selecionadas: ${selectedCount} colunas visíveis (modo: ${currentViewMode})`);
+                addDebugMessage(`🎯 Aplicado perfil ODS: ${selectedCount} colunas, modo: ${currentViewMode}`);
+            });
+        }
+          function selectCSCColumns() {
+            applyViewModeTransition('csc', 'CSC', () => {
+                currentViewMode = 'csc'; // Define o modo de visualização
+                // Colunas CSC: ID, Palavras Chave, Palavras chave normalizadas e traduzidas, Indicadores CSC, Pilar CSC
+                const cscColumns = ['ID', 'Palavras Chave', 'Palavras chave normalizadas e Traduzidas', 'Indicadores CSC', 'Pilar CSC'];
+                const checkboxes = document.querySelectorAll('#checkboxContainer input[type="checkbox"]');
+                let selectedCount = 0;
+                
+                checkboxes.forEach((checkbox, index) => {
+                    const columnIndex = parseInt(checkbox.value);
+                    const columnName = columnNames[columnIndex];
+                    const isCSC = cscColumns.includes(columnName);
+                    
+                    checkbox.checked = isCSC;
+                    
+                    if (isCSC) {
+                        selectedCount++;
+                    }
+                });
+                
+                // Re-renderizar a tabela para aplicar as novas regras de truncamento
+                renderTable();
+                
+                updateStatus(`Colunas CSC selecionadas: ${selectedCount} colunas visíveis (modo: ${currentViewMode})`);
+                addDebugMessage(`🏛️ Aplicado perfil CSC: ${selectedCount} colunas, modo: ${currentViewMode}`);
+            });
+        }
+          
+          function selectTechnologyColumns() {
+            applyViewModeTransition('technology', 'Tecnologias', () => {
+                currentViewMode = 'technology'; // Define o modo de visualização
+                // Colunas de Tecnologias - Cidades Inteligentes
+                const technologyColumns = ['ID', 'Palavras Chave', 'Palavras chave normalizadas e Traduzidas', 'Aspecto Principal - Estudo', 'Categorias'];
+                const checkboxes = document.querySelectorAll('#checkboxContainer input[type="checkbox"]');
+                let selectedCount = 0;
+                
+                checkboxes.forEach((checkbox, index) => {
+                    const columnIndex = parseInt(checkbox.value);
+                    const columnName = columnNames[columnIndex];
+                    const isTechnology = technologyColumns.includes(columnName);
+                    
+                    checkbox.checked = isTechnology;
+                    
+                    if (isTechnology) {
+                        selectedCount++;
+                    }
+                });
+                
+                // Re-renderizar a tabela para aplicar as novas regras de truncamento
+                renderTable();
+                
+                updateStatus(`Colunas de tecnologias selecionadas: ${selectedCount} colunas visíveis (texto completo, sem truncamento)`);
+                addDebugMessage(`🔬 Aplicado perfil tecnologias: ${selectedCount} colunas, modo: ${currentViewMode}`);
+            });
+        }
+        
+        function clearAllColumns() {
+            applyViewModeTransition('custom', 'Limpeza', () => {
+                currentViewMode = 'custom'; // Define o modo de visualização
+                const checkboxes = document.querySelectorAll('#checkboxContainer input[type="checkbox"]');
+                
+                checkboxes.forEach((checkbox, index) => {
+                    checkbox.checked = false;
+                });
+                
+                // Re-renderizar a tabela para aplicar as novas regras de truncamento
+                renderTable();
+                
+                updateStatus(`Todas as colunas desmarcadas - tabela vazia (modo: ${currentViewMode})`);
+                addDebugMessage(`🚫 Todas as colunas desabilitadas, modo: ${currentViewMode}`);
+            });
+        }
+        
+        function showColumn(columnIndex) {
+            const thElements = document.querySelectorAll(`#mainTable th:nth-child(${columnIndex + 1})`);
+            const tdElements = document.querySelectorAll(`#mainTable td:nth-child(${columnIndex + 1})`);
+            
+            // Mostrar coluna
+            [...thElements, ...tdElements].forEach(element => {
+                element.classList.remove('hidden-column');
+            });
+        }
+        
+        function hideColumn(columnIndex) {
+            const thElements = document.querySelectorAll(`#mainTable th:nth-child(${columnIndex + 1})`);
+            const tdElements = document.querySelectorAll(`#mainTable td:nth-child(${columnIndex + 1})`);
+            
+            // Ocultar coluna
+            [...thElements, ...tdElements].forEach(element => {
+                element.classList.add('hidden-column');
+            });
+        }
+
+        // FUNÇÃO PARA ALTERNAR VISUALIZAÇÃO DE TEXTO LONGO
+        function toggleText(uniqueId) {
+            const shortSpan = document.getElementById(`${uniqueId}_short`);
+            const fullSpan = document.getElementById(`${uniqueId}_full`);
+            const button = document.getElementById(`${uniqueId}_btn`);
+            
+            if (!shortSpan || !fullSpan || !button) {
+                console.error('Elementos não encontrados para ID:', uniqueId);
+                return;
+            }
+            
+            if (fullSpan.style.display === 'none') {
+                // Mostrar texto completo
+                shortSpan.style.display = 'none';
+                fullSpan.style.display = 'inline';
+                button.textContent = 'Ver menos';
+                button.style.background = '#6c757d';
+            } else {
+                // Mostrar texto truncado
+                shortSpan.style.display = 'inline';
+                fullSpan.style.display = 'none';
+                button.textContent = 'Ver mais';
+                button.style.background = '#007bff';
+            }
+        }
+    </script>
+    
+
+        </div>
+        </div>
+        
+        <!-- Footer com padrão geométrico animado -->
+        <div class="presentation-footer relative overflow-hidden">
+            <!-- Padrão geométrico animado -->
+            <div class="absolute inset-0 flex items-center justify-center geometric-pattern">
+                <div class="w-8 h-8 bg-white bg-opacity-20 transform rotate-45 mx-1 rotating-square"></div>
+                <div class="w-8 h-8 bg-white bg-opacity-20 transform rotate-45 mx-1 rotating-square" style="animation-delay: 0.5s;"></div>
+                <div class="w-8 h-8 bg-white bg-opacity-20 transform rotate-45 mx-1 rotating-square" style="animation-delay: 1s;"></div>
+                <div class="w-8 h-8 bg-white bg-opacity-20 transform rotate-45 mx-1 rotating-square" style="animation-delay: 1.5s;"></div>
+                <div class="w-8 h-8 bg-white bg-opacity-20 transform rotate-45 mx-1 rotating-square" style="animation-delay: 2s;"></div>
+                <div class="w-8 h-8 bg-white bg-opacity-20 transform rotate-45 mx-1 rotating-square" style="animation-delay: 2.5s;"></div>
+                <div class="w-8 h-8 bg-white bg-opacity-20 transform rotate-45 mx-1 rotating-square" style="animation-delay: 3s;"></div>
+                <div class="w-8 h-8 bg-white bg-opacity-20 transform rotate-45 mx-1 rotating-square" style="animation-delay: 3.5s;"></div>
+            </div>
+            
+            <!-- Elementos geométricos adicionais -->
+            <div class="absolute left-8 top-4">
+                <div class="w-6 h-6 bg-cyan-300 bg-opacity-40 transform rotate-45 slow-rotating"></div>
+            </div>
+            <div class="absolute right-8 top-4">
+                <div class="w-8 h-8 border-2 border-white border-opacity-60 transform rotate-45 slow-rotating" style="animation-delay: 1s;"></div>
+            </div>
+            
+            <!-- Elementos geométricos extras -->
+            <div class="absolute left-1/4 top-2">
+                <div class="w-4 h-4 bg-blue-200 bg-opacity-30 transform rotate-45 rotating-square" style="animation-delay: 0.8s;"></div>
+            </div>
+            <div class="absolute right-1/4 bottom-2">
+                <div class="w-6 h-6 border border-cyan-200 border-opacity-50 transform rotate-45 slow-rotating" style="animation-delay: 2.2s;"></div>
+            </div>        </div>
+    </div>
+    
+    <script>
+        // Inicializar a aplicação quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🎨 Header e Footer animados carregados com sucesso!');
+            
+            // Animar elementos do cabeçalho via CSS (já aplicado automaticamente)
+            const headerElement = document.querySelector('.presentation-header');
+            const footerElement = document.querySelector('.presentation-footer');
+            
+            if (headerElement) {
+                headerElement.style.animation = 'fadeInDown 0.8s ease-out forwards';
+            }
+            if (footerElement) {
+                footerElement.style.animation = 'fadeInUp 0.8s ease-out 0.3s forwards';
+            }
+        });
+    </script>
+</body>
+</html>

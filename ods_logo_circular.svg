@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Círculo dos ODS com cores oficiais -->
+  <g transform="translate(200,200)">
+    <!-- ODS 1 - Erradicação da Pobreza -->
+    <path d="M 0,-180 A 180,180 0 0,1 52.9,-171.2 L 31.8,-103.0 A 108,108 0 0,0 0,-108 Z" fill="#e5243b"/>
+    
+    <!-- ODS 2 - Fome Zero -->
+    <path d="M 52.9,-171.2 A 180,180 0 0,1 104.4,-146.5 L 62.6,-87.9 A 108,108 0 0,0 31.8,-103.0 Z" fill="#dda63a"/>
+    
+    <!-- ODS 3 - Saúde e Bem-Estar -->
+    <path d="M 104.4,-146.5 A 180,180 0 0,1 146.5,-104.4 L 87.9,-62.6 A 108,108 0 0,0 62.6,-87.9 Z" fill="#4c9f38"/>
+    
+    <!-- ODS 4 - Educação de Qualidade -->
+    <path d="M 146.5,-104.4 A 180,180 0 0,1 171.2,-52.9 L 103.0,-31.8 A 108,108 0 0,0 87.9,-62.6 Z" fill="#c5192d"/>
+    
+    <!-- ODS 5 - Igualdade de Gênero -->
+    <path d="M 171.2,-52.9 A 180,180 0 0,1 180,0 L 108,0 A 108,108 0 0,0 103.0,-31.8 Z" fill="#ff3a21"/>
+    
+    <!-- ODS 6 - Água Potável e Saneamento -->
+    <path d="M 180,0 A 180,180 0 0,1 171.2,52.9 L 103.0,31.8 A 108,108 0 0,0 108,0 Z" fill="#26bde2"/>
+    
+    <!-- ODS 7 - Energia Limpa e Acessível -->
+    <path d="M 171.2,52.9 A 180,180 0 0,1 146.5,104.4 L 87.9,62.6 A 108,108 0 0,0 103.0,31.8 Z" fill="#fcc30b"/>
+    
+    <!-- ODS 8 - Trabalho Decente e Crescimento Econômico -->
+    <path d="M 146.5,104.4 A 180,180 0 0,1 104.4,146.5 L 62.6,87.9 A 108,108 0 0,0 87.9,62.6 Z" fill="#a21942"/>
+    
+    <!-- ODS 9 - Indústria, Inovação e Infraestrutura -->
+    <path d="M 104.4,146.5 A 180,180 0 0,1 52.9,171.2 L 31.8,103.0 A 108,108 0 0,0 62.6,87.9 Z" fill="#fd6925"/>
+    
+    <!-- ODS 10 - Redução das Desigualdades -->
+    <path d="M 52.9,171.2 A 180,180 0 0,1 0,180 L 0,108 A 108,108 0 0,0 31.8,103.0 Z" fill="#dd1367"/>
+    
+    <!-- ODS 11 - Cidades e Comunidades Sustentáveis -->
+    <path d="M 0,180 A 180,180 0 0,1 -52.9,171.2 L -31.8,103.0 A 108,108 0 0,0 0,108 Z" fill="#fd9d24"/>
+    
+    <!-- ODS 12 - Consumo e Produção Responsáveis -->
+    <path d="M -52.9,171.2 A 180,180 0 0,1 -104.4,146.5 L -62.6,87.9 A 108,108 0 0,0 -31.8,103.0 Z" fill="#bf8b2e"/>
+    
+    <!-- ODS 13 - Ação contra a Mudança Global do Clima -->
+    <path d="M -104.4,146.5 A 180,180 0 0,1 -146.5,104.4 L -87.9,62.6 A 108,108 0 0,0 -62.6,87.9 Z" fill="#3f7e44"/>
+    
+    <!-- ODS 14 - Vida na Água -->
+    <path d="M -146.5,104.4 A 180,180 0 0,1 -171.2,52.9 L -103.0,31.8 A 108,108 0 0,0 -87.9,62.6 Z" fill="#0a97d9"/>
+    
+    <!-- ODS 15 - Vida Terrestre -->
+    <path d="M -171.2,52.9 A 180,180 0 0,1 -180,0 L -108,0 A 108,108 0 0,0 -103.0,31.8 Z" fill="#56c02b"/>
+    
+    <!-- ODS 16 - Paz, Justiça e Instituições Eficazes -->
+    <path d="M -180,0 A 180,180 0 0,1 -171.2,-52.9 L -103.0,-31.8 A 108,108 0 0,0 -108,0 Z" fill="#00689d"/>
+    
+    <!-- ODS 17 - Parcerias e Meios de Implementação -->
+    <path d="M -171.2,-52.9 A 180,180 0 0,1 -146.5,-104.4 L -87.9,-62.6 A 108,108 0 0,0 -103.0,-31.8 Z" fill="#19486a"/>
+    
+    <!-- ODS 17 continuação -->
+    <path d="M -146.5,-104.4 A 180,180 0 0,1 -104.4,-146.5 L -62.6,-87.9 A 108,108 0 0,0 -87.9,-62.6 Z" fill="#19486a"/>
+    
+    <!-- ODS 1 continuação -->
+    <path d="M -104.4,-146.5 A 180,180 0 0,1 -52.9,-171.2 L -31.8,-103.0 A 108,108 0 0,0 -62.6,-87.9 Z" fill="#e5243b"/>
+    
+    <!-- ODS 1 final -->
+    <path d="M -52.9,-171.2 A 180,180 0 0,1 0,-180 L 0,-108 A 108,108 0 0,0 -31.8,-103.0 Z" fill="#e5243b"/>
+  </g>
+  
+  <!-- Círculo interno branco -->
+  <circle cx="200" cy="200" r="80" fill="white"/>
+  
+  <!-- Texto SDG no centro (opcional) -->
+  <text x="200" y="210" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#333">ODS</text>
+</svg>

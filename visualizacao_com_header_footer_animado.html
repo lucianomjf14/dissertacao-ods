@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cidades Inteligentes e ODS - RSL | Luciano Marinho Silveira</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+        
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', Arial, sans-serif;
+            overflow-x: hidden;
+            background-color: #f5f5f5;
+        }
+        
+        /* Animações CSS extraídas do apresentacao.html */
+        @keyframes fadeInDown {
+            from { 
+                opacity: 0; 
+                transform: translateY(-50px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+        
+        @keyframes continuousRotation {
+            from { 
+                transform: rotate(45deg); 
+            }
+            to { 
+                transform: rotate(405deg);
+            }
+        }
+        
+        @keyframes slowRotation {
+            from { 
+                transform: rotate(45deg); 
+            }
+            to { 
+                transform: rotate(135deg);
+            }
+        }
+        
+        .rotating-square {
+            animation: continuousRotation 4s linear infinite;
+        }
+        
+        .slow-rotating {
+            animation: slowRotation 6s ease-in-out infinite alternate;
+        }
+        
+        .geometric-pattern div {
+            transition: all 0.3s ease;
+        }
+        
+        .geometric-pattern div:hover {
+            transform: rotate(90deg) scale(1.2) !important;
+        }
+        
+        .line-divider {
+            transform-origin: left center;
+        }
+        
+        .logo-hover:hover {
+            transform: scale(1.05);
+            transition: transform 0.3s ease;
+        }
+        
+        /* Estilos do cabeçalho */
+        #header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #059669 50%, #06b6d4 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 0;
+            margin-bottom: 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        #header .flex {
+            position: relative;
+            z-index: 10;
+        }
+        
+        #divider {
+            height: 4px;
+            background: linear-gradient(to right, #1e40af, #059669, #06b6d4);
+            margin-top: 1rem;
+            transform-origin: left center;
+            animation: fadeInUp 1s ease-out 0.5s both;
+        }
+        
+        /* Estilos do rodapé */
+        #footer {
+            background: linear-gradient(135deg, #1e3a8a 0%, #059669 50%, #06b6d4 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 0;
+            margin-top: 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Container principal */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .content-wrapper {
+            padding: 30px;
+        }
+        
+        /* Estilos da tabela */
+        .table-container {
+            margin-bottom: 30px;
+            overflow-x: auto;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+            vertical-align: top;
+        }
+        
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #2d3748;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .ods-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            margin: 2px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            color: white;
+            text-align: center;
+            min-width: 50px;
+        }
+        
+        /* Cores específicas para cada ODS */
+        .ods-3 { background-color: #4C9F38; }
+        .ods-4 { background-color: #C5192D; }
+        .ods-6 { background-color: #26BDE2; }
+        .ods-7 { background-color: #FCC30B; color: #000; }
+        .ods-8 { background-color: #A21942; }
+        .ods-9 { background-color: #FD6925; }
+        .ods-10 { background-color: #DD1367; }
+        .ods-11 { background-color: #FD9D24; }
+        .ods-12 { background-color: #BF8B2E; }
+        .ods-13 { background-color: #3F7E44; }
+        .ods-15 { background-color: #56C02B; }
+        .ods-16 { background-color: #00689D; }
+        .ods-17 { background-color: #19486A; }
+        
+        /* Controles */
+        .controls {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            margin: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background-color: #0056b3;
+            transform: translateY(-1px);
+        }
+        
+        .btn.active {
+            background-color: #28a745;
+        }
+        
+        /* Estatísticas */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-left: 4px solid #007bff;
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        /* Gráficos */
+        .chart-container {
+            margin: 30px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .chart-title {
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #2d3748;
+        }
+        
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .content-wrapper {
+                padding: 15px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            table {
+                font-size: 14px;
+            }
+            
+            th, td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Header com logo e slogan (extraído do apresentacao.html) -->
+        <div id="header">
+            <div class="flex justify-between items-center">
+                <!-- Logo Estácio Oficial -->
+                <div class="flex items-center">
+                    <div class="relative logo-hover">
+                        <div class="w-16 h-16 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
+                            <span class="text-white font-bold text-lg">ESTÁCIO</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Título principal -->
+                <div class="text-center flex-1 mx-8">
+                    <h1 class="text-2xl md:text-3xl font-bold leading-tight">
+                        CIDADES INTELIGENTES E ODS - REVISÃO SISTEMÁTICA
+                    </h1>
+                    <p class="text-lg mt-2 opacity-90">Luciano Marinho Silveira - MADE/Estácio</p>
+                </div>
+                
+                <!-- Slogan -->
+                <div class="text-right">
+                    <div class="font-bold">
+                        <span class="text-blue-100">EDUCAR</span>
+                        <span class="text-teal-200 ml-2">PARA</span>
+                    </div>
+                    <div class="font-bold">
+                        <span class="text-teal-200">TRANS</span>
+                        <span class="text-blue-100">FORMAR</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Linha divisória animada -->
+            <div id="divider" class="w-full bg-gradient-to-r from-blue-600 via-teal-500 to-teal-300 line-divider"></div>
+            
+            <!-- Padrão geométrico animado no header -->
+            <div class="absolute inset-0 flex items-center justify-center geometric-pattern pointer-events-none opacity-10">
+                <div id="header-shape1" class="w-6 h-6 bg-white bg-opacity-20 transform rotate-45 mx-1 rotating-square"></div>
+                <div id="header-shape2" class="w-8 h-8 bg-white bg-opacity-15 transform rotate-45 mx-1 slow-rotating"></div>
+                <div id="header-shape3" class="w-6 h-6 bg-white bg-opacity-20 transform rotate-45 mx-1 rotating-square"></div>
+                <div id="header-shape4" class="w-10 h-10 bg-white bg-opacity-10 transform rotate-45 mx-1"></div>
+                <div id="header-shape5" class="w-6 h-6 bg-white bg-opacity-20 transform rotate-45 mx-1 slow-rotating"></div>
+            </div>
+            
+            <!-- Elementos geométricos adicionais no header -->
+            <div class="absolute left-8 top-4">
+                <div class="w-4 h-4 bg-teal-200 bg-opacity-40 transform rotate-45 rotating-square"></div>
+            </div>
+            <div class="absolute right-8 top-4">
+                <div class="w-6 h-6 border-2 border-white border-opacity-60 transform rotate-45 slow-rotating"></div>
+            </div>
+        </div>
+
+        <!-- Conteúdo principal -->
+        <div class="content-wrapper">
+            <!-- Controles -->
+            <div class="controls">
+                <h3 style="margin-top: 0;">Filtros e Visualizações</h3>
+                <button class="btn" onclick="showAll()">Mostrar Todos</button>
+                <button class="btn" onclick="filterByODS()">Filtrar por ODS</button>
+                <button class="btn" onclick="filterByTechnology()">Filtrar por Tecnologia</button>
+                <button class="btn" onclick="showStatistics()">Estatísticas</button>
+                <button class="btn" onclick="exportData()">Exportar Dados</button>
+            </div>
+
+            <!-- Estatísticas resumo -->
+            <div id="statistics" class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalArticles">127</div>
+                    <div class="stat-label">Total de Artigos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalODS">11</div>
+                    <div class="stat-label">ODS Identificados</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalTechnologies">15</div>
+                    <div class="stat-label">Tecnologias</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="avgYear">2020</div>
+                    <div class="stat-label">Ano Médio</div>
+                </div>
+            </div>
+
+            <!-- Container da Tabela -->
+            <div class="table-container">
+                <table id="articlesTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Título</th>
+                            <th>Autores</th>
+                            <th>Ano</th>
+                            <th>Journal</th>
+                            <th>ODS</th>
+                            <th>Tecnologias SC</th>
+                            <th>Pilares CSC</th>
+                            <th>País</th>
+                            <th>Citações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <!-- Os dados serão carregados aqui via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Gráficos -->
+            <div class="chart-container">
+                <h3 class="chart-title">Distribuição de ODS por Ano</h3>
+                <canvas id="odsChart" width="400" height="200"></canvas>
+            </div>
+
+            <div class="chart-container">
+                <h3 class="chart-title">Tecnologias Mais Utilizadas</h3>
+                <canvas id="techChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+
+        <!-- Footer com padrão geométrico (extraído do apresentacao.html) -->
+        <div id="footer" class="relative overflow-hidden">
+            <!-- Padrão geométrico animado -->
+            <div class="absolute inset-0 flex items-center justify-center geometric-pattern">
+                <div id="shape1" class="w-8 h-8 bg-white bg-opacity-10 transform rotate-45 mx-1 rotating-square"></div>
+                <div id="shape2" class="w-8 h-8 bg-white bg-opacity-10 transform rotate-45 mx-1 slow-rotating"></div>
+                <div id="shape3" class="w-8 h-8 bg-white bg-opacity-10 transform rotate-45 mx-1 rotating-square"></div>
+                <div id="shape4" class="w-8 h-8 bg-white bg-opacity-10 transform rotate-45 mx-1"></div>
+                <div id="shape5" class="w-8 h-8 bg-white bg-opacity-10 transform rotate-45 mx-1 slow-rotating"></div>
+                <div id="shape6" class="w-8 h-8 bg-white bg-opacity-10 transform rotate-45 mx-1 rotating-square"></div>
+                <div id="shape7" class="w-8 h-8 bg-white bg-opacity-10 transform rotate-45 mx-1"></div>
+                <div id="shape8" class="w-8 h-8 bg-white bg-opacity-10 transform rotate-45 mx-1 slow-rotating"></div>
+                <div id="shape9" class="w-8 h-8 bg-white bg-opacity-10 transform rotate-45 mx-1 rotating-square"></div>
+                <div id="shape10" class="w-8 h-8 bg-white bg-opacity-10 transform rotate-45 mx-1"></div>
+            </div>
+            
+            <!-- Elementos geométricos adicionais -->
+            <div class="absolute left-8 top-4">
+                <div class="w-6 h-6 bg-teal-200 bg-opacity-40 transform rotate-45 rotating-square"></div>
+            </div>
+            <div class="absolute right-8 top-4">
+                <div class="w-8 h-8 border-2 border-white border-opacity-60 transform rotate-45 slow-rotating"></div>
+            </div>
+            
+            <!-- Conteúdo do footer limpo - apenas animações -->
+            <div class="relative z-10 text-center px-8 py-6">
+                <!-- Rodapé com apenas as animações, sem texto -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dados de exemplo (serão substituídos pelos dados reais da planilha)
+        let articlesData = [
+            {
+                id: 1,
+                titulo: "Smart Cities and Sustainable Development Goals",
+                autores: "Silva, J.; Santos, M.",
+                ano: 2021,
+                journal: "Sustainability",
+                ods: ["ODS 11", "ODS 9"],
+                tecnologias: ["IoT", "Big Data"],
+                pilares: ["Meio Ambiente", "Economia"],
+                pais: "Brasil",
+                citacoes: 45
+            },
+            // Mais dados serão adicionados aqui
+        ];
+
+        // Função para carregar os dados na tabela
+        function loadTableData(data = articlesData) {
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = '';
+            
+            data.forEach(article => {
+                const row = document.createElement('tr');
+                
+                const odsHtml = article.ods.map(ods => {
+                    const odsNumber = ods.replace('ODS ', '');
+                    return `<span class="ods-badge ods-${odsNumber}">${ods}</span>`;
+                }).join('');
+                
+                const techHtml = article.tecnologias.join(', ');
+                const pilaresHtml = article.pilares.join(', ');
+                
+                row.innerHTML = `
+                    <td>${article.id}</td>
+                    <td>${article.titulo}</td>
+                    <td>${article.autores}</td>
+                    <td>${article.ano}</td>
+                    <td>${article.journal}</td>
+                    <td>${odsHtml}</td>
+                    <td>${techHtml}</td>
+                    <td>${pilaresHtml}</td>
+                    <td>${article.pais}</td>
+                    <td>${article.citacoes}</td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Funções dos controles
+        function showAll() {
+            loadTableData(articlesData);
+            document.querySelectorAll('.btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function filterByODS() {
+            // Implementar filtro por ODS
+            console.log('Filtrar por ODS');
+            event.target.classList.add('active');
+        }
+
+        function filterByTechnology() {
+            // Implementar filtro por tecnologia
+            console.log('Filtrar por Tecnologia');
+            event.target.classList.add('active');
+        }
+
+        function showStatistics() {
+            // Atualizar estatísticas
+            console.log('Mostrar Estatísticas');
+            event.target.classList.add('active');
+        }
+
+        function exportData() {
+            // Implementar exportação
+            console.log('Exportar dados');
+        }
+
+        // Inicializar gráficos
+        function initCharts() {
+            // Gráfico de ODS por Ano
+            const odsCtx = document.getElementById('odsChart').getContext('2d');
+            new Chart(odsCtx, {
+                type: 'line',
+                data: {
+                    labels: ['2018', '2019', '2020', '2021', '2022', '2023'],
+                    datasets: [{
+                        label: 'Artigos por Ano',
+                        data: [12, 19, 23, 28, 25, 20],
+                        borderColor: '#007bff',
+                        backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    }
+                }
+            });
+
+            // Gráfico de Tecnologias
+            const techCtx = document.getElementById('techChart').getContext('2d');
+            new Chart(techCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['IoT', 'Big Data', 'AI', 'Blockchain', 'Cloud Computing'],
+                    datasets: [{
+                        label: 'Frequência de Uso',
+                        data: [65, 45, 38, 25, 42],
+                        backgroundColor: [
+                            '#007bff',
+                            '#28a745',
+                            '#ffc107',
+                            '#dc3545',
+                            '#6f42c1'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+
+        // Inicializar a página
+        document.addEventListener('DOMContentLoaded', function() {
+            loadTableData();
+            initCharts();
+            
+            // Ativar animações dos quadrados após carregamento
+            setTimeout(() => {
+                document.querySelectorAll('.rotating-square').forEach(el => {
+                    el.style.animation = 'continuousRotation 4s linear infinite';
+                });
+                document.querySelectorAll('.slow-rotating').forEach(el => {
+                    el.style.animation = 'slowRotation 6s ease-in-out infinite alternate';
+                });
+            }, 500);
+        });
+    </script>
+</body>
+</html>
